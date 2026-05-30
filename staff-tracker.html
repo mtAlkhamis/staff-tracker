@@ -91,7 +91,7 @@
   <div class="header">
     <button class="back-btn" onclick="goHome()">&#8592;</button>
     <div style="flex:1;"><div class="header-title" id="detail-name"></div><div class="header-sub" id="detail-role"></div></div>
-    <button class="icon-btn" onclick="openEditEmp()">&#9998;</button>
+    <button class="icon-btn" onclick="openEditEmp()">&#9998;</button><button class="icon-btn" style="background:var(--danger-light);color:var(--danger);" onclick="confirmDeleteEmp()">&#128465;</button>
   </div>
   <div class="body" id="detail-body"><div class="loader"><div class="spinner"></div></div></div>
 </div>
@@ -145,6 +145,50 @@
     </div>
   </div>
 </div>
+
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-confirm-title">Are you sure?</div>
+    <p id="modal-confirm-msg" style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;line-height:1.6;"></p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-confirm')">Cancel</button>
+      <button id="modal-confirm-btn" style="padding:13px;border:none;border-radius:var(--radius-sm);background:var(--danger);font-size:15px;font-family:'DM Sans',sans-serif;color:white;cursor:pointer;font-weight:600;">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-edit-tx">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Edit transaction</div>
+    <div class="form-group"><label class="form-label">Amount (KWD)</label><input class="form-input" id="f-edit-amount" type="number" inputmode="decimal"></div>
+    <div class="form-group" id="edit-method-group">
+      <label class="form-label">Payment method</label>
+      <div class="method-selector">
+        <button class="method-opt selected" id="edit-method-cash" onclick="selectEditMethod('cash')">&#128181;<br>Cash</button>
+        <button class="method-opt" id="edit-method-wu" onclick="selectEditMethod('wu')">&#127760;<br>Western Union</button>
+        <button class="method-opt" id="edit-method-split" onclick="switchToEditSplit()">&#9986;<br>Split</button>
+      </div>
+    </div>
+    <div id="edit-split-mode" style="display:none;">
+      <div class="info-box" style="margin-bottom:14px;">Enter how much was paid by each method.</div>
+      <div class="split-row">
+        <div><div class="split-label">&#128181; Cash (KWD)</div><input class="form-input" id="f-edit-split-cash" type="number" inputmode="decimal" placeholder="0.000"></div>
+        <div><div class="split-label">&#127760; Western Union (KWD)</div><input class="form-input" id="f-edit-split-wu" type="number" inputmode="decimal" placeholder="0.000"></div>
+      </div>
+      <div style="margin-top:10px;text-align:right;">
+        <button onclick="switchToEditSingle()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-secondary);font-family:'DM Sans',sans-serif;">&#8592; Single payment</button>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:14px;"><label class="form-label">Transaction date</label><input class="form-input" id="f-edit-date" type="date"></div>
+    <div class="form-group"><label class="form-label">Note (optional)</label><input class="form-input" id="f-edit-note" type="text" placeholder="e.g. internet bill"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-edit-tx')">Cancel</button>
+      <button class="btn-save" onclick="saveEditTx()">Save</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <script>
 const SUPABASE_URL="https://snzeqdlhourgcfhhhdyg.supabase.co";
@@ -177,6 +221,105 @@ function selectMethod(m){selectedMethod=m;["cash","wu"].forEach(x=>document.getE
 function switchToSplit(){isSplitMode=true;document.getElementById("single-mode").style.display="none";document.getElementById("split-mode").style.display="block";document.getElementById("f-split-cash").value="";document.getElementById("f-split-wu").value="";}
 function switchToSingle(){isSplitMode=false;document.getElementById("single-mode").style.display="block";document.getElementById("split-mode").style.display="none";selectMethod("cash");}
 const TX_NEEDS_METHOD=["advance","salary","loan_payment"];
+
+let confirmCallback=null;
+let editingTxId=null,editingTxType=null,editSelectedMethod="cash",editIsSplit=false;
+
+function confirmDeleteEmp(){
+  const emp=employees.find(e=>e.id===currentEmpId);
+  document.getElementById("modal-confirm-title").textContent="Delete "+emp.name+"?";
+  document.getElementById("modal-confirm-msg").textContent="This will permanently delete "+emp.name+" and all their transaction history. This cannot be undone.";
+  confirmCallback=async()=>{
+    try{
+      await db("DELETE","transactions",null,"employee_id=eq."+currentEmpId);
+      await db("DELETE","employees",null,"id=eq."+currentEmpId);
+      toast("Employee deleted");closeModal("modal-confirm");await goHome();
+    }catch(e){toast("Error: "+e.message);}
+  };
+  document.getElementById("modal-confirm-btn").onclick=()=>confirmCallback();
+  openModal("modal-confirm");
+}
+
+function confirmDeleteTx(txId){
+  document.getElementById("modal-confirm-title").textContent="Delete transaction?";
+  document.getElementById("modal-confirm-msg").textContent="This transaction will be permanently removed. This cannot be undone.";
+  confirmCallback=async()=>{
+    try{
+      await db("DELETE","transactions",null,"id=eq."+txId);
+      toast("Transaction deleted");closeModal("modal-confirm");await openDetail(currentEmpId);
+    }catch(e){toast("Error: "+e.message);}
+  };
+  document.getElementById("modal-confirm-btn").onclick=()=>confirmCallback();
+  openModal("modal-confirm");
+}
+
+function selectEditMethod(m){
+  editSelectedMethod=m;
+  ["cash","wu"].forEach(x=>document.getElementById("edit-method-"+x).classList.toggle("selected",x===m));
+  document.getElementById("edit-method-split").classList.remove("selected");
+}
+function switchToEditSplit(){
+  editIsSplit=true;
+  document.getElementById("edit-method-group").style.display="none";
+  document.getElementById("f-edit-amount").closest(".form-group").style.display="none";
+  document.getElementById("edit-split-mode").style.display="block";
+}
+function switchToEditSingle(){
+  editIsSplit=false;
+  document.getElementById("edit-method-group").style.display="block";
+  document.getElementById("f-edit-amount").closest(".form-group").style.display="block";
+  document.getElementById("edit-split-mode").style.display="none";
+  selectEditMethod("cash");
+}
+
+async function openEditTx(txId){
+  const allTxs=await db("GET","transactions",null,"id=eq."+txId);
+  if(!allTxs.length)return;
+  const t=allTxs[0];
+  editingTxId=txId;editingTxType=t.type;
+  editIsSplit=false;
+  document.getElementById("edit-split-mode").style.display="none";
+  document.getElementById("f-edit-amount").closest(".form-group").style.display="block";
+  const needsMethod=TX_NEEDS_METHOD.includes(t.type);
+  document.getElementById("edit-method-group").style.display=needsMethod?"block":"none";
+  if(t.payment_method==="split"){
+    switchToEditSplit();
+    const wuAmt=Number(t.amount_2||0);
+    const cashAmt=Number(t.amount||0)-wuAmt;
+    document.getElementById("f-edit-split-cash").value=cashAmt||"";
+    document.getElementById("f-edit-split-wu").value=wuAmt||"";
+  } else {
+    document.getElementById("f-edit-amount").value=t.amount||"";
+    selectEditMethod(t.payment_method||"cash");
+  }
+  document.getElementById("f-edit-date").value=t.date||"";
+  document.getElementById("f-edit-note").value=t.note||"";
+  openModal("modal-edit-tx");
+}
+
+async function saveEditTx(){
+  const note=document.getElementById("f-edit-note").value.trim();
+  const date=document.getElementById("f-edit-date").value||todayStr();
+  const[dy,dm]=date.split("-");const month=dy+"-"+dm;
+  const needsMethod=TX_NEEDS_METHOD.includes(editingTxType);
+  try{
+    let payload={note,date,month};
+    if(editIsSplit){
+      const cashAmt=parseFloat(document.getElementById("f-edit-split-cash").value)||0;
+      const wuAmt=parseFloat(document.getElementById("f-edit-split-wu").value)||0;
+      if(!cashAmt&&!wuAmt){toast("Please enter at least one amount");return;}
+      payload={...payload,amount:cashAmt+wuAmt,payment_method:"split",amount_2:wuAmt};
+    } else {
+      const amount=parseFloat(document.getElementById("f-edit-amount").value)||0;
+      if(!amount){toast("Please enter an amount");return;}
+      const payment_method=needsMethod?editSelectedMethod:null;
+      payload={...payload,amount,payment_method,amount_2:0};
+    }
+    await db("PATCH","transactions",payload,"id=eq."+editingTxId);
+    toast("Updated ✓");closeModal("modal-edit-tx");await openDetail(currentEmpId);
+  }catch(e){toast("Error: "+e.message);}
+}
+
 async function goHome(){show("screen-home");await renderHome();}
 async function renderHome(){
   document.getElementById("home-month-label").textContent=monthLabel(viewMonth);
@@ -269,7 +412,11 @@ async function openDetail(empId){
           '<div class="tx-info"><div class="tx-type">'+tm.label+(t.note?" &#8212; "+t.note:"")+'</div>'+
           '<div class="tx-meta">'+fmtDate(t.date)+(methodHtml?" &nbsp;"+methodHtml:"")+'</div></div>'+
           '<div class="tx-right"><div class="tx-amount '+tm.cls+'">'+tm.sign+fmtKWD(t.amount)+'</div>'+
-          '<div style="font-size:10px;color:var(--text-hint);margin-top:2px;">'+t.month+'</div></div></div>';
+          '<div style="font-size:10px;color:var(--text-hint);margin-top:2px;">'+t.month+'</div>'+
+          '<div style="margin-top:6px;display:flex;gap:6px;justify-content:flex-end;">'+
+          '<button onclick="event.stopPropagation();openEditTx(\''+t.id+'\')" style="background:var(--surface2);border:none;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:11px;color:var(--text-secondary);">Edit</button>'+
+          '<button onclick="event.stopPropagation();confirmDeleteTx(\''+t.id+'\')" style="background:var(--danger-light);border:none;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:11px;color:var(--danger);">Delete</button>'+
+          '</div></div></div>';
       });
     }
     body.innerHTML=html;
