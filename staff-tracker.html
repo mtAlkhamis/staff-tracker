@@ -10,465 +10,516 @@
 <title>Staff Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#F5F3EE;--surface:#FFFFFF;--surface2:#EFEDE8;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1A1814;--text-secondary:#6B6760;--text-hint:#A8A49E;--accent:#2D5016;--accent-light:#EBF2E3;--accent-text:#2D5016;--danger:#8B1A1A;--danger-light:#F7EDED;--warning:#7A5200;--warning-light:#FFF3DC;--info:#1A3D6B;--info-light:#E8F0FA;--radius:16px;--radius-sm:10px;}
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto;}
-  .screen{display:none;flex-direction:column;min-height:100vh;}.screen.active{display:flex;}
-  .header{padding:56px 20px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;}
-  .header-title{font-size:18px;font-weight:600;flex:1;letter-spacing:-0.3px;}
-  .header-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;}
-  .back-btn,.icon-btn{width:36px;height:36px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text);flex-shrink:0;}
-  .body{padding:16px;flex:1;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-bottom:40px;}
-  .emp-card{background:var(--surface);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1px solid var(--border);transition:transform 0.15s;}
-  .emp-card:active{transform:scale(0.98);}
-  .avatar{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;flex-shrink:0;}
-  .emp-meta{flex:1;min-width:0;}.emp-name{font-size:15px;font-weight:600;}.emp-role{font-size:12px;color:var(--text-secondary);margin-top:2px;}
-  .emp-right{text-align:right;flex-shrink:0;}.emp-net{font-size:16px;font-weight:600;font-family:'DM Mono',monospace;}.emp-net-label{font-size:11px;color:var(--text-hint);margin-top:2px;}
-  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .stat-card{background:var(--surface);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);}
-  .stat-label{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
-  .stat-val{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:-0.5px;}
-  .stat-val.green{color:var(--accent);}.stat-val.red{color:var(--danger);}.stat-val.warn{color:var(--warning);}
-  .payslip-card{background:var(--surface);border-radius:var(--radius);padding:16px;border:1px solid var(--border);}
-  .payslip-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-secondary);margin-bottom:12px;}
-  .payslip-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;}
-  .payslip-row:last-child{border-bottom:none;}.payslip-row.total{font-weight:600;font-size:15px;padding-top:10px;}
-  .payslip-row .label{color:var(--text-secondary);}.payslip-row.total .label{color:var(--text);}
-  .amount-neg{color:var(--danger);font-family:'DM Mono',monospace;}.amount-pos{color:var(--accent);font-family:'DM Mono',monospace;}
-  .amount-warn{color:var(--warning);font-family:'DM Mono',monospace;}.amount-neutral{font-family:'DM Mono',monospace;}
-  .actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .action-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 10px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:500;}
-  .action-btn:active{background:var(--surface2);}.action-btn .btn-icon{font-size:20px;}
-  .pay-full-btn{background:var(--accent);border:none;border-radius:var(--radius-sm);padding:14px;width:100%;cursor:pointer;font-size:15px;font-family:'DM Sans',sans-serif;color:white;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .pay-full-btn:active{opacity:0.9;}
-  .section-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-secondary);padding:4px 2px;}
-  .tx-card{background:var(--surface);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;border:1px solid var(--border);}
-  .tx-icon-wrap{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;margin-top:2px;}
-  .tx-info{flex:1;min-width:0;}.tx-type{font-size:13px;font-weight:600;}
-  .tx-meta{font-size:11px;color:var(--text-secondary);margin-top:3px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
-  .tx-right{text-align:right;flex-shrink:0;}.tx-amount{font-size:14px;font-weight:600;font-family:'DM Mono',monospace;}
-  .method-pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px;}
-  .pill-cash{background:var(--accent-light);color:var(--accent-text);}.pill-wu{background:var(--warning-light);color:var(--warning);}.pill-split{background:var(--info-light);color:var(--info);}
-  .add-emp-btn{background:var(--surface);border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text-secondary);font-weight:500;}
-  .add-emp-btn:active{background:var(--surface2);}
-  .empty{text-align:center;padding:40px 20px;color:var(--text-hint);font-size:14px;line-height:1.6;}.empty-icon{font-size:40px;margin-bottom:12px;}
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center;}
-  .modal-overlay.open{display:flex;}
-  .modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;}
-  .modal-handle{width:36px;height:4px;background:var(--border-strong);border-radius:99px;margin:0 auto 20px;}
-  .modal-title{font-size:18px;font-weight:600;margin-bottom:20px;letter-spacing:-0.3px;}
-  .form-group{margin-bottom:14px;}
-  .form-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px;display:block;}
-  .form-input{width:100%;padding:13px 14px;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);font-size:15px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;}
-  .form-input:focus{border-color:var(--accent);}
-  .method-selector{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-  .method-opt{border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);line-height:1.4;}
-  .method-opt.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent-text);}
-  .split-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.split-label{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
-  .modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
-  .btn-cancel{padding:13px;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);background:none;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--text-secondary);cursor:pointer;font-weight:500;}
-  .btn-save{padding:13px;border:none;border-radius:var(--radius-sm);background:var(--accent);font-size:15px;font-family:'DM Sans',sans-serif;color:white;cursor:pointer;font-weight:600;}
-  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--text);color:white;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:200;white-space:nowrap;}
-  .toast.show{opacity:1;}
-  .loader{display:flex;align-items:center;justify-content:center;padding:40px;}
-  .spinner{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .month-nav{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--radius-sm);padding:10px 14px;border:1px solid var(--border);}
-  .month-nav-btn{background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-secondary);padding:4px 8px;}
-  .month-nav-label{font-size:14px;font-weight:600;}
-  .c0{background:#EBF2E3;color:#2D5016}.c1{background:#E8F0FA;color:#1A3D6B}.c2{background:#F7EDED;color:#8B1A1A}.c3{background:#FFF3DC;color:#7A5200}.c4{background:#F3EEF8;color:#5B2D8A}
-  .info-box{background:var(--info-light);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--info);line-height:1.5;}
+:root{--bg:#F5F3EE;--surface:#fff;--surface2:#EFEDE8;--border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.15);--text:#1A1814;--text-s:#6B6760;--text-h:#A8A49E;--green:#2D5016;--green-l:#EBF2E3;--red:#8B1A1A;--red-l:#F7EDED;--amber:#7A5200;--amber-l:#FFF3DC;--blue:#1A3D6B;--blue-l:#E8F0FA;--r:16px;--rs:10px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto}
+.screen{display:none;flex-direction:column;min-height:100vh}.screen.active{display:flex}
+.hdr{padding:56px 20px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.hdr-title{font-size:18px;font-weight:600;flex:1;letter-spacing:-.3px}
+.hdr-sub{font-size:12px;color:var(--text-s);margin-top:2px}
+.ibtn{width:36px;height:36px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--text);flex-shrink:0}
+.ibtn.danger{background:var(--red-l);color:var(--red)}
+.body{padding:16px;flex:1;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-bottom:40px}
+.emp-card{background:var(--surface);border-radius:var(--r);padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;border:1px solid var(--border)}
+.emp-card:active{opacity:.8}
+.avatar{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;flex-shrink:0}
+.emp-meta{flex:1;min-width:0}
+.emp-name{font-size:15px;font-weight:600}
+.emp-role{font-size:12px;color:var(--text-s);margin-top:2px}
+.emp-right{text-align:right;flex-shrink:0}
+.emp-net{font-size:16px;font-weight:600;font-family:'DM Mono',monospace}
+.emp-net-lbl{font-size:11px;color:var(--text-h);margin-top:2px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--surface);border-radius:var(--rs);padding:14px;border:1px solid var(--border)}
+.stat-lbl{font-size:11px;color:var(--text-s);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.stat-val{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:-.5px}
+.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.a{color:var(--amber)}
+.payslip{background:var(--surface);border-radius:var(--r);padding:16px;border:1px solid var(--border)}
+.ps-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);margin-bottom:12px}
+.ps-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px}
+.ps-row:last-child{border-bottom:none}
+.ps-row.total{font-weight:600;font-size:15px;padding-top:10px}
+.ps-row .lbl{color:var(--text-s)}.ps-row.total .lbl{color:var(--text)}
+.neg{color:var(--red);font-family:'DM Mono',monospace}
+.pos{color:var(--green);font-family:'DM Mono',monospace}
+.warn{color:var(--amber);font-family:'DM Mono',monospace}
+.mono{font-family:'DM Mono',monospace}
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.act-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:12px 10px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:500}
+.act-btn:active{background:var(--surface2)}
+.act-btn .ico{font-size:20px}
+.pay-btn{background:var(--green);border:none;border-radius:var(--rs);padding:14px;width:100%;cursor:pointer;font-size:15px;font-family:'DM Sans',sans-serif;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+.pay-btn:active{opacity:.9}
+.sec-lbl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);padding:4px 2px}
+.tx-card{background:var(--surface);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;border:1px solid var(--border)}
+.tx-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;margin-top:2px}
+.tx-info{flex:1;min-width:0}
+.tx-type{font-size:13px;font-weight:600}
+.tx-meta{font-size:11px;color:var(--text-s);margin-top:3px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.tx-right{text-align:right;flex-shrink:0}
+.tx-amt{font-size:14px;font-weight:600;font-family:'DM Mono',monospace}
+.tx-actions{margin-top:6px;display:flex;gap:6px;justify-content:flex-end}
+.tx-btn{background:var(--surface2);border:none;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--text-s)}
+.tx-btn.del{background:var(--red-l);color:var(--red)}
+.pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px}
+.pill.cash{background:var(--green-l);color:var(--green)}
+.pill.wu{background:var(--amber-l);color:var(--amber)}
+.pill.split{background:var(--blue-l);color:var(--blue)}
+.add-btn{background:var(--surface);border:1.5px dashed var(--border-strong);border-radius:var(--r);padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text-s);font-weight:500}
+.add-btn:active{background:var(--surface2)}
+.empty{text-align:center;padding:40px 20px;color:var(--text-h);font-size:14px;line-height:1.6}
+.empty-ico{font-size:40px;margin-bottom:12px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:430px;max-height:92vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border-strong);border-radius:99px;margin:0 auto 20px}
+.modal-title{font-size:18px;font-weight:600;margin-bottom:20px;letter-spacing:-.3px}
+.fg{margin-bottom:14px}
+.fl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-s);margin-bottom:8px;display:block}
+.fi{width:100%;padding:13px 14px;border:1.5px solid var(--border-strong);border-radius:var(--rs);font-size:15px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none}
+.fi:focus{border-color:var(--green)}
+.msel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.mopt{border:1.5px solid var(--border-strong);border-radius:var(--rs);padding:10px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);line-height:1.4}
+.mopt.sel{border-color:var(--green);background:var(--green-l);color:var(--green)}
+.split-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.split-lbl{font-size:12px;font-weight:600;color:var(--text-s);margin-bottom:6px}
+.modal-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.btn-cancel{padding:13px;border:1.5px solid var(--border-strong);border-radius:var(--rs);background:none;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--text-s);cursor:pointer;font-weight:500}
+.btn-save{padding:13px;border:none;border-radius:var(--rs);background:var(--green);font-size:15px;font-family:'DM Sans',sans-serif;color:#fff;cursor:pointer;font-weight:600}
+.btn-del-confirm{padding:13px;border:none;border-radius:var(--rs);background:var(--red);font-size:15px;font-family:'DM Sans',sans-serif;color:#fff;cursor:pointer;font-weight:600}
+.info-box{background:var(--blue-l);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.5}
+.month-nav{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--rs);padding:10px 14px;border:1px solid var(--border)}
+.mnav-btn{background:none;border:none;cursor:pointer;font-size:22px;color:var(--text-s);padding:2px 8px}
+.mnav-lbl{font-size:14px;font-weight:600}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .3s;z-index:200;white-space:nowrap}
+.toast.show{opacity:1}
+.loader{display:flex;align-items:center;justify-content:center;padding:40px}
+.spinner{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.c0{background:#EBF2E3;color:#2D5016}.c1{background:#E8F0FA;color:#1A3D6B}.c2{background:#F7EDED;color:#8B1A1A}.c3{background:#FFF3DC;color:#7A5200}.c4{background:#F3EEF8;color:#5B2D8A}
 </style>
 </head>
 <body>
-<div id="screen-home" class="screen active">
-  <div class="header">
-    <div><div class="header-title">Household Staff</div><div class="header-sub" id="home-month-label"></div></div>
+
+<!-- HOME -->
+<div id="s-home" class="screen active">
+  <div class="hdr">
+    <div><div class="hdr-title">Household Staff</div><div class="hdr-sub" id="home-sub"></div></div>
   </div>
   <div class="body" id="home-body"><div class="loader"><div class="spinner"></div></div></div>
 </div>
-<div id="screen-detail" class="screen">
-  <div class="header">
-    <button class="back-btn" onclick="goHome()">&#8592;</button>
-    <div style="flex:1;"><div class="header-title" id="detail-name"></div><div class="header-sub" id="detail-role"></div></div>
-    <button class="icon-btn" onclick="openEditEmp()">&#9998;</button><button class="icon-btn" style="background:var(--danger-light);color:var(--danger);" onclick="confirmDeleteEmp()">&#128465;</button>
+
+<!-- DETAIL -->
+<div id="s-detail" class="screen">
+  <div class="hdr">
+    <button class="ibtn" onclick="goHome()">&#8592;</button>
+    <div style="flex:1"><div class="hdr-title" id="d-name"></div><div class="hdr-sub" id="d-role"></div></div>
+    <button class="ibtn" onclick="openEditEmp()">&#9998;</button>
+    <button class="ibtn danger" onclick="askDeleteEmp()">&#128465;</button>
   </div>
   <div class="body" id="detail-body"><div class="loader"><div class="spinner"></div></div></div>
 </div>
-<div class="modal-overlay" id="modal-emp">
+
+<!-- MODAL: ADD/EDIT EMPLOYEE -->
+<div class="overlay" id="m-emp">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-emp-title">Add employee</div>
-    <div class="form-group"><label class="form-label">Full name</label><input class="form-input" id="f-name" type="text" placeholder="e.g. Nimal Perera"></div>
-    <div class="form-group"><label class="form-label">Role</label><input class="form-input" id="f-role" type="text" placeholder="e.g. Driver, Housekeeper"></div>
-    <div class="form-group"><label class="form-label">Monthly salary (KWD)</label><input class="form-input" id="f-salary" type="number" inputmode="decimal" placeholder="e.g. 130"></div>
-    <div class="form-group"><label class="form-label">Current loan balance (KWD)</label><input class="form-input" id="f-loan" type="number" inputmode="decimal" placeholder="0"></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('modal-emp')">Cancel</button>
+    <div class="modal-title" id="m-emp-title">Add employee</div>
+    <div class="fg"><label class="fl">Full name</label><input class="fi" id="f-name" type="text" placeholder="e.g. Nimal Perera"></div>
+    <div class="fg"><label class="fl">Role</label><input class="fi" id="f-role" type="text" placeholder="e.g. Driver, Housekeeper"></div>
+    <div class="fg"><label class="fl">Monthly salary (KWD)</label><input class="fi" id="f-salary" type="number" inputmode="decimal" placeholder="130"></div>
+    <div class="fg"><label class="fl">Current loan balance (KWD)</label><input class="fi" id="f-loan" type="number" inputmode="decimal" placeholder="0"></div>
+    <div class="modal-acts">
+      <button class="btn-cancel" onclick="closeModal('m-emp')">Cancel</button>
       <button class="btn-save" onclick="saveEmp()">Save</button>
     </div>
   </div>
 </div>
-<div class="modal-overlay" id="modal-tx">
+
+<!-- MODAL: TRANSACTION (add or edit) -->
+<div class="overlay" id="m-tx">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-tx-title">Add transaction</div>
-    <div id="single-mode">
-      <div class="form-group"><label class="form-label">Amount (KWD)</label><input class="form-input" id="f-tx-amount" type="number" inputmode="decimal" placeholder="e.g. 30.000"></div>
-      <div class="form-group" id="method-group">
-        <label class="form-label">Payment method</label>
-        <div class="method-selector">
-          <button class="method-opt selected" id="method-cash" onclick="selectMethod('cash')">&#128181;<br>Cash</button>
-          <button class="method-opt" id="method-wu" onclick="selectMethod('wu')">&#127760;<br>Western Union</button>
-          <button class="method-opt" id="method-split" onclick="switchToSplit()">&#9986;<br>Split</button>
+    <div class="modal-title" id="m-tx-title">Add transaction</div>
+    <!-- single -->
+    <div id="tx-single">
+      <div class="fg"><label class="fl">Amount (KWD)</label><input class="fi" id="f-amt" type="number" inputmode="decimal" placeholder="0.000"></div>
+      <div class="fg" id="tx-method-group">
+        <label class="fl">Payment method</label>
+        <div class="msel">
+          <button class="mopt sel" id="m-cash" onclick="selMethod('cash')">&#128181;<br>Cash</button>
+          <button class="mopt" id="m-wu" onclick="selMethod('wu')">&#127760;<br>Western Union</button>
+          <button class="mopt" id="m-split" onclick="goSplit()">&#9986;<br>Split</button>
         </div>
       </div>
     </div>
-    <div id="split-mode" style="display:none;">
-      <div class="info-box" style="margin-bottom:14px;">Enter how much was paid by each method.</div>
+    <!-- split -->
+    <div id="tx-split" style="display:none">
+      <div class="info-box" style="margin-bottom:14px">Enter how much was paid by each method.</div>
       <div class="split-row">
-        <div><div class="split-label">&#128181; Cash (KWD)</div><input class="form-input" id="f-split-cash" type="number" inputmode="decimal" placeholder="0.000"></div>
-        <div><div class="split-label">&#127760; Western Union (KWD)</div><input class="form-input" id="f-split-wu" type="number" inputmode="decimal" placeholder="0.000"></div>
+        <div><div class="split-lbl">&#128181; Cash (KWD)</div><input class="fi" id="f-cash" type="number" inputmode="decimal" placeholder="0.000"></div>
+        <div><div class="split-lbl">&#127760; W.Union (KWD)</div><input class="fi" id="f-wu" type="number" inputmode="decimal" placeholder="0.000"></div>
       </div>
-      <div style="margin-top:10px;text-align:right;">
-        <button onclick="switchToSingle()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-secondary);font-family:'DM Sans',sans-serif;">&#8592; Single payment</button>
+      <div style="margin-top:10px;text-align:right">
+        <button onclick="goSingle()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-s);font-family:'DM Sans',sans-serif">&#8592; Single payment</button>
       </div>
     </div>
-    <div class="form-group" style="margin-top:14px;">
-      <label class="form-label">Transaction date</label>
-      <input class="form-input" id="f-tx-date" type="date">
-    </div>
-    <div class="form-group"><label class="form-label">Note (optional)</label><input class="form-input" id="f-tx-note" type="text" placeholder="e.g. internet bill"></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('modal-tx')">Cancel</button>
+    <div class="fg" style="margin-top:14px"><label class="fl">Transaction date</label><input class="fi" id="f-date" type="date"></div>
+    <div class="fg"><label class="fl">Note (optional)</label><input class="fi" id="f-note" type="text" placeholder="e.g. internet bill"></div>
+    <div class="modal-acts">
+      <button class="btn-cancel" onclick="closeModal('m-tx')">Cancel</button>
       <button class="btn-save" onclick="saveTx()">Save</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-confirm">
+<!-- MODAL: CONFIRM DELETE -->
+<div class="overlay" id="m-confirm">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-confirm-title">Are you sure?</div>
-    <p id="modal-confirm-msg" style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;line-height:1.6;"></p>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('modal-confirm')">Cancel</button>
-      <button id="modal-confirm-btn" style="padding:13px;border:none;border-radius:var(--radius-sm);background:var(--danger);font-size:15px;font-family:'DM Sans',sans-serif;color:white;cursor:pointer;font-weight:600;">Delete</button>
+    <div class="modal-title" id="m-confirm-title">Are you sure?</div>
+    <p id="m-confirm-msg" style="font-size:14px;color:var(--text-s);margin-bottom:24px;line-height:1.6"></p>
+    <div class="modal-acts">
+      <button class="btn-cancel" onclick="closeModal('m-confirm')">Cancel</button>
+      <button class="btn-del-confirm" id="m-confirm-ok">Delete</button>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-edit-tx">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Edit transaction</div>
-    <div class="form-group"><label class="form-label">Amount (KWD)</label><input class="form-input" id="f-edit-amount" type="number" inputmode="decimal"></div>
-    <div class="form-group" id="edit-method-group">
-      <label class="form-label">Payment method</label>
-      <div class="method-selector">
-        <button class="method-opt selected" id="edit-method-cash" onclick="selectEditMethod('cash')">&#128181;<br>Cash</button>
-        <button class="method-opt" id="edit-method-wu" onclick="selectEditMethod('wu')">&#127760;<br>Western Union</button>
-        <button class="method-opt" id="edit-method-split" onclick="switchToEditSplit()">&#9986;<br>Split</button>
-      </div>
-    </div>
-    <div id="edit-split-mode" style="display:none;">
-      <div class="info-box" style="margin-bottom:14px;">Enter how much was paid by each method.</div>
-      <div class="split-row">
-        <div><div class="split-label">&#128181; Cash (KWD)</div><input class="form-input" id="f-edit-split-cash" type="number" inputmode="decimal" placeholder="0.000"></div>
-        <div><div class="split-label">&#127760; Western Union (KWD)</div><input class="form-input" id="f-edit-split-wu" type="number" inputmode="decimal" placeholder="0.000"></div>
-      </div>
-      <div style="margin-top:10px;text-align:right;">
-        <button onclick="switchToEditSingle()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-secondary);font-family:'DM Sans',sans-serif;">&#8592; Single payment</button>
-      </div>
-    </div>
-    <div class="form-group" style="margin-top:14px;"><label class="form-label">Transaction date</label><input class="form-input" id="f-edit-date" type="date"></div>
-    <div class="form-group"><label class="form-label">Note (optional)</label><input class="form-input" id="f-edit-note" type="text" placeholder="e.g. internet bill"></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('modal-edit-tx')">Cancel</button>
-      <button class="btn-save" onclick="saveEditTx()">Save</button>
-    </div>
-  </div>
-</div>
 <div class="toast" id="toast"></div>
+
 <script>
-const SUPABASE_URL="https://snzeqdlhourgcfhhhdyg.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuemVxZGxob3VyZ2NmaGhoZHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjU0MjEsImV4cCI6MjA5NTc0MTQyMX0.0JUhOTFhXGsSSpxPQM00EFXOMnPTUKqwaAVlhMDAIzk";
-const HDR={"Content-Type":"application/json","apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY};
-async function db(method,table,body,params){
-  let url=SUPABASE_URL+"/rest/v1/"+table;
-  if(params)url+="?"+params;
-  const opts={method,headers:{...HDR,"Prefer":method==="POST"?"return=representation":""}};
-  if(body)opts.body=JSON.stringify(body);
-  const res=await fetch(url,opts);
-  if(!res.ok){const e=await res.text();throw new Error(e);}
-  if(method==="DELETE"||res.status===204)return[];
+const SB = "https://snzeqdlhourgcfhhhdyg.supabase.co";
+const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuemVxZGxob3VyZ2NmaGhoZHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjU0MjEsImV4cCI6MjA5NTc0MTQyMX0.0JUhOTFhXGsSSpxPQM00EFXOMnPTUKqwaAVlhMDAIzk";
+const H = {"Content-Type":"application/json","apikey":KEY,"Authorization":"Bearer "+KEY};
+
+async function api(method, table, body, qs) {
+  const url = SB + "/rest/v1/" + table + (qs ? "?" + qs : "");
+  const res = await fetch(url, {
+    method,
+    headers: {...H, "Prefer": method === "POST" ? "return=representation" : ""},
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) throw new Error(await res.text());
+  if (method === "DELETE" || res.status === 204) return [];
   return res.json();
 }
-const COLORS=["c0","c1","c2","c3","c4"];
-let currentEmpId=null,currentTxType=null,editingEmpId=null,selectedMethod="cash",isSplitMode=false;
-let viewMonth=getMonthKey(),employees=[];
-function getMonthKey(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
-function todayStr(){return new Date().toISOString().slice(0,10);}
-function monthLabel(mk){const[y,m]=mk.split("-");return new Date(y,m-1,1).toLocaleString("default",{month:"long",year:"numeric"});}
-function fmtKWD(n){return"KWD "+Number(n||0).toFixed(3);}
-function fmtDate(d){if(!d)return"";return new Date(d+"T00:00:00").toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});}
-function getInitials(name){return name.trim().split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);}
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo(0,0);}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
-function closeModal(id){document.getElementById(id).classList.remove("open");}
-function openModal(id){document.getElementById(id).classList.add("open");}
-function selectMethod(m){selectedMethod=m;["cash","wu"].forEach(x=>document.getElementById("method-"+x).classList.toggle("selected",x===m));document.getElementById("method-split").classList.remove("selected");}
-function switchToSplit(){isSplitMode=true;document.getElementById("single-mode").style.display="none";document.getElementById("split-mode").style.display="block";document.getElementById("f-split-cash").value="";document.getElementById("f-split-wu").value="";}
-function switchToSingle(){isSplitMode=false;document.getElementById("single-mode").style.display="block";document.getElementById("split-mode").style.display="none";selectMethod("cash");}
-const TX_NEEDS_METHOD=["advance","salary","loan_payment"];
 
-let confirmCallback=null;
-let editingTxId=null,editingTxType=null,editSelectedMethod="cash",editIsSplit=false;
+const COLORS = ["c0","c1","c2","c3","c4"];
+const NEEDS_METHOD = ["advance","salary","loan_payment"];
+const TX_LABELS = {
+  advance:      {label:"Advance",        ico:"&#128181;", bg:"var(--blue-l)",  cls:"neg", sign:"-"},
+  salary:       {label:"Salary paid",    ico:"&#9989;",   bg:"var(--green-l)", cls:"pos", sign:""},
+  loan:         {label:"Loan added",     ico:"&#128203;", bg:"var(--amber-l)", cls:"warn",sign:"+"},
+  loan_payment: {label:"Loan repayment", ico:"&#128184;", bg:"var(--red-l)",   cls:"neg", sign:"-"},
+  deduction:    {label:"Deduction",      ico:"&#10134;",  bg:"var(--red-l)",   cls:"neg", sign:"-"}
+};
 
-function confirmDeleteEmp(){
-  const emp=employees.find(e=>e.id===currentEmpId);
-  document.getElementById("modal-confirm-title").textContent="Delete "+emp.name+"?";
-  document.getElementById("modal-confirm-msg").textContent="This will permanently delete "+emp.name+" and all their transaction history. This cannot be undone.";
-  confirmCallback=async()=>{
-    try{
-      await db("DELETE","transactions",null,"employee_id=eq."+currentEmpId);
-      await db("DELETE","employees",null,"id=eq."+currentEmpId);
-      toast("Employee deleted");closeModal("modal-confirm");await goHome();
-    }catch(e){toast("Error: "+e.message);}
-  };
-  document.getElementById("modal-confirm-btn").onclick=()=>confirmCallback();
-  openModal("modal-confirm");
+let emps = [], curEmpId = null, editEmpId = null;
+let curTxType = null, editTxId = null;
+let isSplit = false, method = "cash";
+let viewMonth = monthKey(new Date());
+
+function monthKey(d) { return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0"); }
+function today() { return new Date().toISOString().slice(0,10); }
+function fmtMonth(mk) { const [y,m] = mk.split("-"); return new Date(y,m-1,1).toLocaleString("default",{month:"long",year:"numeric"}); }
+function fmtKWD(n) { return "KWD " + Number(n||0).toFixed(3); }
+function fmtDate(d) { if(!d) return ""; return new Date(d+"T12:00:00").toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}); }
+function initials(name) { return name.trim().split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2); }
+
+function show(id) { document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); document.getElementById(id).classList.add("active"); window.scrollTo(0,0); }
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+function toast(msg) { const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2500); }
+
+/* ── METHOD SELECTOR ── */
+function selMethod(m) {
+  method = m;
+  ["cash","wu"].forEach(x => document.getElementById("m-"+x).classList.toggle("sel", x===m));
+  document.getElementById("m-split").classList.remove("sel");
+}
+function goSplit() {
+  isSplit = true;
+  document.getElementById("tx-single").style.display = "none";
+  document.getElementById("tx-split").style.display = "block";
+  document.getElementById("f-cash").value = "";
+  document.getElementById("f-wu").value = "";
+}
+function goSingle() {
+  isSplit = false;
+  document.getElementById("tx-single").style.display = "block";
+  document.getElementById("tx-split").style.display = "none";
+  selMethod("cash");
 }
 
-function confirmDeleteTx(txId){
-  document.getElementById("modal-confirm-title").textContent="Delete transaction?";
-  document.getElementById("modal-confirm-msg").textContent="This transaction will be permanently removed. This cannot be undone.";
-  confirmCallback=async()=>{
-    try{
-      await db("DELETE","transactions",null,"id=eq."+txId);
-      toast("Transaction deleted");closeModal("modal-confirm");await openDetail(currentEmpId);
-    }catch(e){toast("Error: "+e.message);}
-  };
-  document.getElementById("modal-confirm-btn").onclick=()=>confirmCallback();
-  openModal("modal-confirm");
-}
+/* ── HOME ── */
+async function goHome() { show("s-home"); await renderHome(); }
 
-function selectEditMethod(m){
-  editSelectedMethod=m;
-  ["cash","wu"].forEach(x=>document.getElementById("edit-method-"+x).classList.toggle("selected",x===m));
-  document.getElementById("edit-method-split").classList.remove("selected");
-}
-function switchToEditSplit(){
-  editIsSplit=true;
-  document.getElementById("edit-method-group").style.display="none";
-  document.getElementById("f-edit-amount").closest(".form-group").style.display="none";
-  document.getElementById("edit-split-mode").style.display="block";
-}
-function switchToEditSingle(){
-  editIsSplit=false;
-  document.getElementById("edit-method-group").style.display="block";
-  document.getElementById("f-edit-amount").closest(".form-group").style.display="block";
-  document.getElementById("edit-split-mode").style.display="none";
-  selectEditMethod("cash");
-}
-
-async function openEditTx(txId){
-  const allTxs=await db("GET","transactions",null,"id=eq."+txId);
-  if(!allTxs.length)return;
-  const t=allTxs[0];
-  editingTxId=txId;editingTxType=t.type;
-  editIsSplit=false;
-  document.getElementById("edit-split-mode").style.display="none";
-  document.getElementById("f-edit-amount").closest(".form-group").style.display="block";
-  const needsMethod=TX_NEEDS_METHOD.includes(t.type);
-  document.getElementById("edit-method-group").style.display=needsMethod?"block":"none";
-  if(t.payment_method==="split"){
-    switchToEditSplit();
-    const wuAmt=Number(t.amount_2||0);
-    const cashAmt=Number(t.amount||0)-wuAmt;
-    document.getElementById("f-edit-split-cash").value=cashAmt||"";
-    document.getElementById("f-edit-split-wu").value=wuAmt||"";
-  } else {
-    document.getElementById("f-edit-amount").value=t.amount||"";
-    selectEditMethod(t.payment_method||"cash");
-  }
-  document.getElementById("f-edit-date").value=t.date||"";
-  document.getElementById("f-edit-note").value=t.note||"";
-  openModal("modal-edit-tx");
-}
-
-async function saveEditTx(){
-  const note=document.getElementById("f-edit-note").value.trim();
-  const date=document.getElementById("f-edit-date").value||todayStr();
-  const[dy,dm]=date.split("-");const month=dy+"-"+dm;
-  const needsMethod=TX_NEEDS_METHOD.includes(editingTxType);
-  try{
-    let payload={note,date,month};
-    if(editIsSplit){
-      const cashAmt=parseFloat(document.getElementById("f-edit-split-cash").value)||0;
-      const wuAmt=parseFloat(document.getElementById("f-edit-split-wu").value)||0;
-      if(!cashAmt&&!wuAmt){toast("Please enter at least one amount");return;}
-      payload={...payload,amount:cashAmt+wuAmt,payment_method:"split",amount_2:wuAmt};
+async function renderHome() {
+  document.getElementById("home-sub").textContent = fmtMonth(viewMonth);
+  const body = document.getElementById("home-body");
+  body.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+  try {
+    emps = await api("GET","employees",null,"order=created_at.asc");
+    let txs = [];
+    if (emps.length) {
+      const ids = emps.map(e => '"'+e.id+'"').join(",");
+      txs = await api("GET","transactions",null,"employee_id=in.("+ids+")&month=eq."+viewMonth);
+    }
+    let h = '<div class="month-nav"><button class="mnav-btn" onclick="chMonth(-1)">&#8249;</button><span class="mnav-lbl">'+fmtMonth(viewMonth)+'</span><button class="mnav-btn" onclick="chMonth(1)">&#8250;</button></div>';
+    if (!emps.length) {
+      h += '<div class="empty"><div class="empty-ico">&#128101;</div>No employees yet.<br>Add your first staff member below.</div>';
     } else {
-      const amount=parseFloat(document.getElementById("f-edit-amount").value)||0;
-      if(!amount){toast("Please enter an amount");return;}
-      const payment_method=needsMethod?editSelectedMethod:null;
-      payload={...payload,amount,payment_method,amount_2:0};
+      emps.forEach((emp,i) => {
+        const etxs = txs.filter(t=>t.employee_id===emp.id);
+        const out = etxs.filter(t=>["advance","deduction","loan_payment","salary"].includes(t.type)).reduce((s,t)=>s+Number(t.amount||0),0);
+        const net = Number(emp.salary) - out;
+        const cls = net < 0 ? "neg" : net === 0 ? "mono" : "pos";
+        h += '<div class="emp-card" onclick="openDetail(\''+emp.id+'\')">'
+          + '<div class="avatar '+COLORS[i%5]+'">'+initials(emp.name)+'</div>'
+          + '<div class="emp-meta"><div class="emp-name">'+emp.name+'</div><div class="emp-role">'+(emp.role||"Staff")+'</div></div>'
+          + '<div class="emp-right"><div class="emp-net '+cls+'">'+fmtKWD(net)+'</div><div class="emp-net-lbl">balance due</div></div>'
+          + '</div>';
+      });
     }
-    await db("PATCH","transactions",payload,"id=eq."+editingTxId);
-    toast("Updated ✓");closeModal("modal-edit-tx");await openDetail(currentEmpId);
-  }catch(e){toast("Error: "+e.message);}
+    h += '<button class="add-btn" onclick="openAddEmp()">&#65291; Add employee</button>';
+    body.innerHTML = h;
+  } catch(e) { body.innerHTML = '<div class="empty">Connection error.<br><small>'+e.message+'</small></div>'; }
 }
 
-async function goHome(){show("screen-home");await renderHome();}
-async function renderHome(){
-  document.getElementById("home-month-label").textContent=monthLabel(viewMonth);
-  const body=document.getElementById("home-body");
-  body.innerHTML='<div class="loader"><div class="spinner"></div></div>';
-  try{
-    employees=await db("GET","employees",null,"order=created_at.asc");
-    const txs=employees.length?await db("GET","transactions",null,"employee_id=in.("+employees.map(e=>'"'+e.id+'"').join(",")+")"+"&month=eq."+viewMonth):[];
-    let html='<div class="month-nav"><button class="month-nav-btn" onclick="changeMonth(-1)">&#8249;</button><span class="month-nav-label">'+monthLabel(viewMonth)+'</span><button class="month-nav-btn" onclick="changeMonth(1)">&#8250;</button></div>';
-    if(!employees.length){html+='<div class="empty"><div class="empty-icon">&#128101;</div>No employees yet.<br>Add your first staff member below.</div>';}
-    else{
-      employees.forEach((emp,i)=>{
-        const etxs=txs.filter(t=>t.employee_id===emp.id);
-        const totalOut=etxs.filter(t=>["advance","deduction","loan_payment","salary"].includes(t.type)).reduce((s,t)=>s+Number(t.amount||0),0);
-        const net=Number(emp.salary)-totalOut;
-        const color=COLORS[i%COLORS.length];
-        html+='<div class="emp-card" onclick="openDetail(\''+emp.id+'\')">'+
-          '<div class="avatar '+color+'">'+getInitials(emp.name)+'</div>'+
-          '<div class="emp-meta"><div class="emp-name">'+emp.name+'</div><div class="emp-role">'+( emp.role||"Staff")+'</div></div>'+
-          '<div class="emp-right"><div class="emp-net '+( net<0?"amount-neg":net===0?"amount-neutral":"amount-pos")+'">'+fmtKWD(net)+'</div><div class="emp-net-label">balance due</div></div>'+
-          '</div>';
-      });
-    }
-    html+='<button class="add-emp-btn" onclick="openAddEmp()">&#65291; Add employee</button>';
-    body.innerHTML=html;
-  }catch(e){body.innerHTML='<div class="empty">Error: '+e.message+'</div>';}
+function chMonth(d) {
+  const [y,m] = viewMonth.split("-").map(Number);
+  const nd = new Date(y, m-1+d, 1);
+  viewMonth = monthKey(nd);
+  renderHome();
 }
-function changeMonth(dir){const[y,m]=viewMonth.split("-").map(Number);const d=new Date(y,m-1+dir,1);viewMonth=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");renderHome();}
-async function openDetail(empId){
-  currentEmpId=empId;show("screen-detail");
-  const body=document.getElementById("detail-body");
-  body.innerHTML='<div class="loader"><div class="spinner"></div></div>';
-  const emp=employees.find(e=>e.id===empId);
-  document.getElementById("detail-name").textContent=emp.name;
-  document.getElementById("detail-role").textContent=emp.role||"Staff";
-  try{
-    const allTxs=await db("GET","transactions",null,"employee_id=eq."+empId+"&order=date.desc,created_at.desc");
-    const monthTxs=allTxs.filter(t=>t.month===viewMonth);
-    const advances=monthTxs.filter(t=>t.type==="advance").reduce((s,t)=>s+Number(t.amount||0),0);
-    const deductions=monthTxs.filter(t=>t.type==="deduction").reduce((s,t)=>s+Number(t.amount||0),0);
-    const loanRep=monthTxs.filter(t=>t.type==="loan_payment").reduce((s,t)=>s+Number(t.amount||0),0);
-    const salaryPaid=monthTxs.filter(t=>t.type==="salary").reduce((s,t)=>s+Number(t.amount||0),0);
-    const net=Number(emp.salary)-advances-deductions-loanRep-salaryPaid;
-    let loanBal=Number(emp.initial_loan||0);
-    allTxs.forEach(t=>{if(t.type==="loan")loanBal+=Number(t.amount||0);if(t.type==="loan_payment")loanBal-=Number(t.amount||0);});
-    loanBal=Math.max(0,loanBal);
-    let html='<div class="stats-grid">'+
-      '<div class="stat-card"><div class="stat-label">Monthly salary</div><div class="stat-val">'+fmtKWD(emp.salary)+'</div></div>'+
-      '<div class="stat-card"><div class="stat-label">Balance due</div><div class="stat-val '+( net<0?"red":net===0?"":"green")+'">'+fmtKWD(net)+'</div></div>'+
-      '<div class="stat-card"><div class="stat-label">Advances this month</div><div class="stat-val '+( advances>0?"red":"")+'">'+fmtKWD(advances)+'</div></div>'+
-      '<div class="stat-card"><div class="stat-label">Loan balance</div><div class="stat-val '+( loanBal>0?"warn":"")+'">'+fmtKWD(loanBal)+'</div></div>'+
-      '</div>';
-    html+='<div class="payslip-card"><div class="payslip-title">'+monthLabel(viewMonth)+' &#8212; Payslip</div>'+
-      '<div class="payslip-row"><span class="label">Salary</span><span class="amount-pos">'+fmtKWD(emp.salary)+'</span></div>';
-    if(advances)html+='<div class="payslip-row"><span class="label">(-) Advances</span><span class="amount-neg">-'+fmtKWD(advances)+'</span></div>';
-    if(deductions)html+='<div class="payslip-row"><span class="label">(-) Deductions</span><span class="amount-neg">-'+fmtKWD(deductions)+'</span></div>';
-    if(loanRep)html+='<div class="payslip-row"><span class="label">(-) Loan repayment</span><span class="amount-neg">-'+fmtKWD(loanRep)+'</span></div>';
-    if(salaryPaid)html+='<div class="payslip-row"><span class="label">(-) Salary paid</span><span class="amount-neg">-'+fmtKWD(salaryPaid)+'</span></div>';
-    html+='<div class="payslip-row total"><span class="label">Balance due</span><span class="'+( net<0?"amount-neg":net===0?"amount-neutral":"amount-pos")+'">'+fmtKWD(net)+'</span></div>';
-    if(loanBal)html+='<div class="payslip-row"><span class="label" style="color:var(--text-hint)">Loan balance</span><span class="amount-warn">'+fmtKWD(loanBal)+'</span></div>';
-    html+='</div>';
-    html+='<div class="actions-grid">'+
-      '<button class="action-btn" onclick="openTx('+"'advance'"+')"><span class="btn-icon">&#128181;</span>Give advance</button>'+
-      '<button class="action-btn" onclick="openTx('+"'loan'"+')"><span class="btn-icon">&#128203;</span>Add loan</button>'+
-      '<button class="action-btn" onclick="openTx('+"'deduction'"+')"><span class="btn-icon">&#10134;</span>Add deduction</button>'+
-      '<button class="action-btn" onclick="openTx('+"'loan_payment'"+')"><span class="btn-icon">&#128184;</span>Loan repayment</button>'+
-      '</div>';
-    html+='<button class="pay-full-btn" onclick="openTx('+"'salary'"+')">&#10003; &nbsp;Pay salary balance &nbsp;('+fmtKWD(Math.max(0,net))+')</button>';
-    html+='<div class="section-label">Transaction history</div>';
-    if(!allTxs.length){html+='<div class="empty" style="padding:20px;">No transactions yet</div>';}
-    else{
-      const typeMap={
-        advance:{label:"Advance",icon:"&#128181;",bg:"var(--info-light)",cls:"amount-neg",sign:"-"},
-        salary:{label:"Salary paid",icon:"&#9989;",bg:"var(--accent-light)",cls:"amount-pos",sign:""},
-        loan:{label:"Loan added",icon:"&#128203;",bg:"var(--warning-light)",cls:"amount-warn",sign:"+"},
-        loan_payment:{label:"Loan repayment",icon:"&#128184;",bg:"var(--danger-light)",cls:"amount-neg",sign:"-"},
-        deduction:{label:"Deduction",icon:"&#10134;",bg:"var(--danger-light)",cls:"amount-neg",sign:"-"},
-      };
-      allTxs.forEach(t=>{
-        const tm=typeMap[t.type]||{label:t.type,icon:"&bull;",bg:"var(--surface2)",cls:"amount-neutral",sign:""};
-        let methodHtml="";
-        if(t.payment_method==="cash")methodHtml='<span class="method-pill pill-cash">&#128181; Cash</span>';
-        else if(t.payment_method==="wu")methodHtml='<span class="method-pill pill-wu">&#127760; W.Union</span>';
-        else if(t.payment_method==="split"){
-          const wuAmt=Number(t.amount_2||0);const cashAmt=Number(t.amount||0)-wuAmt;
-          methodHtml='<span class="method-pill pill-split">&#9986; '+fmtKWD(cashAmt)+' cash + '+fmtKWD(wuAmt)+' WU</span>';
+
+/* ── DETAIL ── */
+async function openDetail(empId) {
+  curEmpId = empId;
+  show("s-detail");
+  const body = document.getElementById("detail-body");
+  body.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+  const emp = emps.find(e=>e.id===empId);
+  document.getElementById("d-name").textContent = emp.name;
+  document.getElementById("d-role").textContent = emp.role || "Staff";
+  try {
+    const allTx = await api("GET","transactions",null,"employee_id=eq."+empId+"&order=date.desc,created_at.desc");
+    const mTx = allTx.filter(t=>t.month===viewMonth);
+    const advances = mTx.filter(t=>t.type==="advance").reduce((s,t)=>s+Number(t.amount||0),0);
+    const deductions = mTx.filter(t=>t.type==="deduction").reduce((s,t)=>s+Number(t.amount||0),0);
+    const loanRep = mTx.filter(t=>t.type==="loan_payment").reduce((s,t)=>s+Number(t.amount||0),0);
+    const salPaid = mTx.filter(t=>t.type==="salary").reduce((s,t)=>s+Number(t.amount||0),0);
+    const net = Number(emp.salary) - advances - deductions - loanRep - salPaid;
+    let loan = Number(emp.initial_loan||0);
+    allTx.forEach(t => {
+      if (t.type==="loan") loan += Number(t.amount||0);
+      if (t.type==="loan_payment") loan -= Number(t.amount||0);
+    });
+    loan = Math.max(0, loan);
+
+    let h = '<div class="stats">'
+      + '<div class="stat"><div class="stat-lbl">Monthly salary</div><div class="stat-val">'+fmtKWD(emp.salary)+'</div></div>'
+      + '<div class="stat"><div class="stat-lbl">Balance due</div><div class="stat-val '+(net<0?"r":net===0?"":"g")+'">'+fmtKWD(net)+'</div></div>'
+      + '<div class="stat"><div class="stat-lbl">Advances this month</div><div class="stat-val '+(advances>0?"r":"")+'">'+fmtKWD(advances)+'</div></div>'
+      + '<div class="stat"><div class="stat-lbl">Loan balance</div><div class="stat-val '+(loan>0?"a":"")+'">'+fmtKWD(loan)+'</div></div>'
+      + '</div>';
+
+    h += '<div class="payslip"><div class="ps-title">'+fmtMonth(viewMonth)+' &mdash; Payslip</div>'
+      + '<div class="ps-row"><span class="lbl">Salary</span><span class="pos">'+fmtKWD(emp.salary)+'</span></div>';
+    if (advances) h += '<div class="ps-row"><span class="lbl">(-) Advances</span><span class="neg">-'+fmtKWD(advances)+'</span></div>';
+    if (deductions) h += '<div class="ps-row"><span class="lbl">(-) Deductions</span><span class="neg">-'+fmtKWD(deductions)+'</span></div>';
+    if (loanRep) h += '<div class="ps-row"><span class="lbl">(-) Loan repayment</span><span class="neg">-'+fmtKWD(loanRep)+'</span></div>';
+    if (salPaid) h += '<div class="ps-row"><span class="lbl">(-) Salary paid</span><span class="neg">-'+fmtKWD(salPaid)+'</span></div>';
+    h += '<div class="ps-row total"><span class="lbl">Balance due</span><span class="'+(net<0?"neg":net===0?"mono":"pos")+'">'+fmtKWD(net)+'</span></div>';
+    if (loan) h += '<div class="ps-row"><span class="lbl" style="color:var(--text-h)">Loan balance</span><span class="warn">'+fmtKWD(loan)+'</span></div>';
+    h += '</div>';
+
+    h += '<div class="act-grid">'
+      + '<button class="act-btn" onclick="openTx(\'advance\')"><span class="ico">&#128181;</span>Give advance</button>'
+      + '<button class="act-btn" onclick="openTx(\'loan\')"><span class="ico">&#128203;</span>Add loan</button>'
+      + '<button class="act-btn" onclick="openTx(\'deduction\')"><span class="ico">&#10134;</span>Add deduction</button>'
+      + '<button class="act-btn" onclick="openTx(\'loan_payment\')"><span class="ico">&#128184;</span>Loan repayment</button>'
+      + '</div>';
+    h += '<button class="pay-btn" onclick="openTx(\'salary\')">&#10003; &nbsp;Pay salary balance &nbsp;('+fmtKWD(Math.max(0,net))+')</button>';
+    h += '<div class="sec-lbl">Transaction history</div>';
+
+    if (!allTx.length) {
+      h += '<div class="empty" style="padding:20px">No transactions yet</div>';
+    } else {
+      allTx.forEach(t => {
+        const tm = TX_LABELS[t.type] || {label:t.type, ico:"&bull;", bg:"var(--surface2)", cls:"mono", sign:""};
+        let pill = "";
+        if (t.payment_method === "cash") pill = '<span class="pill cash">&#128181; Cash</span>';
+        else if (t.payment_method === "wu") pill = '<span class="pill wu">&#127760; W.Union</span>';
+        else if (t.payment_method === "split") {
+          const wu2 = Number(t.amount_2||0);
+          const cash2 = Number(t.amount||0) - wu2;
+          pill = '<span class="pill split">&#9986; '+fmtKWD(cash2)+' + '+fmtKWD(wu2)+' WU</span>';
         }
-        html+='<div class="tx-card">'+
-          '<div class="tx-icon-wrap" style="background:'+tm.bg+'">'+tm.icon+'</div>'+
-          '<div class="tx-info"><div class="tx-type">'+tm.label+(t.note?" &#8212; "+t.note:"")+'</div>'+
-          '<div class="tx-meta">'+fmtDate(t.date)+(methodHtml?" &nbsp;"+methodHtml:"")+'</div></div>'+
-          '<div class="tx-right"><div class="tx-amount '+tm.cls+'">'+tm.sign+fmtKWD(t.amount)+'</div>'+
-          '<div style="font-size:10px;color:var(--text-hint);margin-top:2px;">'+t.month+'</div>'+
-          '<div style="margin-top:6px;display:flex;gap:6px;justify-content:flex-end;">'+
-          '<button onclick="event.stopPropagation();openEditTx(\''+t.id+'\')" style="background:var(--surface2);border:none;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:11px;color:var(--text-secondary);">Edit</button>'+
-          '<button onclick="event.stopPropagation();confirmDeleteTx(\''+t.id+'\')" style="background:var(--danger-light);border:none;border-radius:6px;padding:3px 7px;cursor:pointer;font-size:11px;color:var(--danger);">Delete</button>'+
-          '</div></div></div>';
+        h += '<div class="tx-card">'
+          + '<div class="tx-ico" style="background:'+tm.bg+'">'+tm.ico+'</div>'
+          + '<div class="tx-info">'
+          +   '<div class="tx-type">'+tm.label+(t.note?' &mdash; '+t.note:'')+'</div>'
+          +   '<div class="tx-meta">'+fmtDate(t.date)+(pill?' &nbsp;'+pill:'')+'</div>'
+          + '</div>'
+          + '<div class="tx-right">'
+          +   '<div class="tx-amt '+tm.cls+'">'+tm.sign+fmtKWD(t.amount)+'</div>'
+          +   '<div style="font-size:10px;color:var(--text-h);margin-top:2px">'+t.month+'</div>'
+          +   '<div class="tx-actions">'
+          +     '<button class="tx-btn" onclick="event.stopPropagation();openEditTx(\''+t.id+'\')">Edit</button>'
+          +     '<button class="tx-btn del" onclick="event.stopPropagation();askDeleteTx(\''+t.id+'\')">Delete</button>'
+          +   '</div>'
+          + '</div>'
+          + '</div>';
       });
     }
-    body.innerHTML=html;
-  }catch(e){body.innerHTML='<div class="empty">Error: '+e.message+'</div>';}
+    body.innerHTML = h;
+  } catch(e) { body.innerHTML = '<div class="empty">Error: '+e.message+'</div>'; }
 }
-function openAddEmp(){editingEmpId=null;document.getElementById("modal-emp-title").textContent="Add employee";["f-name","f-role","f-salary","f-loan"].forEach(id=>document.getElementById(id).value="");openModal("modal-emp");}
-function openEditEmp(){const emp=employees.find(e=>e.id===currentEmpId);editingEmpId=emp.id;document.getElementById("modal-emp-title").textContent="Edit employee";document.getElementById("f-name").value=emp.name;document.getElementById("f-role").value=emp.role||"";document.getElementById("f-salary").value=emp.salary;document.getElementById("f-loan").value=emp.initial_loan||0;openModal("modal-emp");}
-async function saveEmp(){
-  const name=document.getElementById("f-name").value.trim();
-  const role=document.getElementById("f-role").value.trim();
-  const salary=parseFloat(document.getElementById("f-salary").value)||0;
-  const initial_loan=parseFloat(document.getElementById("f-loan").value)||0;
-  if(!name||!salary){toast("Please enter name and salary");return;}
-  try{
-    if(editingEmpId){await db("PATCH","employees",{name,role,salary,initial_loan},"id=eq."+editingEmpId);toast("Updated ✓");}
-    else{await db("POST","employees",{name,role,salary,initial_loan});toast("Employee added ✓");}
-    closeModal("modal-emp");await goHome();if(editingEmpId)await openDetail(editingEmpId);
-  }catch(e){toast("Error: "+e.message);}
+
+/* ── EMPLOYEE MODAL ── */
+function openAddEmp() {
+  editEmpId = null;
+  document.getElementById("m-emp-title").textContent = "Add employee";
+  ["f-name","f-role","f-salary","f-loan"].forEach(id => document.getElementById(id).value = "");
+  openModal("m-emp");
 }
-function openTx(type){
-  currentTxType=type;
-  const titles={advance:"Give advance",loan:"Add loan",deduction:"Add deduction",loan_payment:"Loan repayment",salary:"Pay salary balance"};
-  document.getElementById("modal-tx-title").textContent=titles[type]||"Add transaction";
-  document.getElementById("f-tx-amount").value="";
-  document.getElementById("f-tx-note").value="";
-  document.getElementById("f-tx-date").value=todayStr();
-  switchToSingle();
-  document.getElementById("method-group").style.display=TX_NEEDS_METHOD.includes(type)?"block":"none";
-  openModal("modal-tx");
+function openEditEmp() {
+  const emp = emps.find(e=>e.id===curEmpId);
+  editEmpId = emp.id;
+  document.getElementById("m-emp-title").textContent = "Edit employee";
+  document.getElementById("f-name").value = emp.name;
+  document.getElementById("f-role").value = emp.role || "";
+  document.getElementById("f-salary").value = emp.salary;
+  document.getElementById("f-loan").value = emp.initial_loan || 0;
+  openModal("m-emp");
 }
-async function saveTx(){
-  const note=document.getElementById("f-tx-note").value.trim();
-  const date=document.getElementById("f-tx-date").value||todayStr();
-  const[dy,dm]=date.split("-");const month=dy+"-"+dm;
-  const needsMethod=TX_NEEDS_METHOD.includes(currentTxType);
-  try{
-    if(isSplitMode){
-      const cashAmt=parseFloat(document.getElementById("f-split-cash").value)||0;
-      const wuAmt=parseFloat(document.getElementById("f-split-wu").value)||0;
-      if(!cashAmt&&!wuAmt){toast("Please enter at least one amount");return;}
-      await db("POST","transactions",{employee_id:currentEmpId,type:currentTxType,amount:cashAmt+wuAmt,payment_method:"split",amount_2:wuAmt,note,date,month});
-    }else{
-      const amount=parseFloat(document.getElementById("f-tx-amount").value)||0;
-      if(!amount){toast("Please enter an amount");return;}
-      const payment_method=needsMethod?selectedMethod:null;
-      await db("POST","transactions",{employee_id:currentEmpId,type:currentTxType,amount,payment_method,amount_2:0,note,date,month});
+async function saveEmp() {
+  const name = document.getElementById("f-name").value.trim();
+  const role = document.getElementById("f-role").value.trim();
+  const salary = parseFloat(document.getElementById("f-salary").value) || 0;
+  const initial_loan = parseFloat(document.getElementById("f-loan").value) || 0;
+  if (!name || !salary) { toast("Please enter name and salary"); return; }
+  try {
+    if (editEmpId) {
+      await api("PATCH","employees",{name,role,salary,initial_loan},"id=eq."+editEmpId);
+      toast("Updated \u2713");
+    } else {
+      await api("POST","employees",{name,role,salary,initial_loan});
+      toast("Employee added \u2713");
     }
-    toast("Saved ✓");closeModal("modal-tx");await openDetail(currentEmpId);
-  }catch(e){toast("Error: "+e.message);}
+    closeModal("m-emp");
+    await goHome();
+    if (editEmpId) { curEmpId = editEmpId; await openDetail(editEmpId); }
+  } catch(e) { toast("Error: "+e.message); }
 }
-document.getElementById("home-month-label").textContent=monthLabel(viewMonth);
+
+/* ── DELETE EMPLOYEE ── */
+function askDeleteEmp() {
+  const emp = emps.find(e=>e.id===curEmpId);
+  document.getElementById("m-confirm-title").textContent = "Delete " + emp.name + "?";
+  document.getElementById("m-confirm-msg").textContent = "This will permanently delete " + emp.name + " and all their transaction history. This cannot be undone.";
+  document.getElementById("m-confirm-ok").onclick = async () => {
+    try {
+      await api("DELETE","transactions",null,"employee_id=eq."+curEmpId);
+      await api("DELETE","employees",null,"id=eq."+curEmpId);
+      toast("Employee deleted");
+      closeModal("m-confirm");
+      await goHome();
+    } catch(e) { toast("Error: "+e.message); }
+  };
+  openModal("m-confirm");
+}
+
+/* ── TRANSACTION MODAL (add) ── */
+function openTx(type) {
+  curTxType = type;
+  editTxId = null;
+  const titles = {advance:"Give advance",loan:"Add loan",deduction:"Add deduction",loan_payment:"Loan repayment",salary:"Pay salary balance"};
+  document.getElementById("m-tx-title").textContent = titles[type] || "Add transaction";
+  document.getElementById("f-amt").value = "";
+  document.getElementById("f-note").value = "";
+  document.getElementById("f-date").value = today();
+  goSingle();
+  document.getElementById("tx-method-group").style.display = NEEDS_METHOD.includes(type) ? "block" : "none";
+  openModal("m-tx");
+}
+
+/* ── TRANSACTION MODAL (edit) ── */
+async function openEditTx(txId) {
+  try {
+    const rows = await api("GET","transactions",null,"id=eq."+txId);
+    if (!rows.length) return;
+    const t = rows[0];
+    editTxId = txId;
+    curTxType = t.type;
+    document.getElementById("m-tx-title").textContent = "Edit transaction";
+    document.getElementById("f-date").value = t.date || today();
+    document.getElementById("f-note").value = t.note || "";
+    document.getElementById("tx-method-group").style.display = NEEDS_METHOD.includes(t.type) ? "block" : "none";
+    if (t.payment_method === "split") {
+      goSplit();
+      const wu2 = Number(t.amount_2||0);
+      document.getElementById("f-cash").value = Number(t.amount||0) - wu2;
+      document.getElementById("f-wu").value = wu2;
+    } else {
+      goSingle();
+      document.getElementById("f-amt").value = t.amount || "";
+      selMethod(t.payment_method || "cash");
+    }
+    openModal("m-tx");
+  } catch(e) { toast("Error: "+e.message); }
+}
+
+/* ── SAVE TRANSACTION ── */
+async function saveTx() {
+  const note = document.getElementById("f-note").value.trim();
+  const date = document.getElementById("f-date").value || today();
+  const [dy, dm] = date.split("-");
+  const month = dy + "-" + dm;
+  try {
+    let payload = {note, date, month};
+    if (isSplit) {
+      const c = parseFloat(document.getElementById("f-cash").value) || 0;
+      const w = parseFloat(document.getElementById("f-wu").value) || 0;
+      if (!c && !w) { toast("Please enter at least one amount"); return; }
+      payload = {...payload, amount: c+w, payment_method: "split", amount_2: w};
+    } else {
+      const amount = parseFloat(document.getElementById("f-amt").value) || 0;
+      if (!amount) { toast("Please enter an amount"); return; }
+      const payment_method = NEEDS_METHOD.includes(curTxType) ? method : null;
+      payload = {...payload, amount, payment_method, amount_2: 0};
+    }
+    if (editTxId) {
+      await api("PATCH","transactions",payload,"id=eq."+editTxId);
+      toast("Updated \u2713");
+    } else {
+      await api("POST","transactions",{...payload, employee_id: curEmpId, type: curTxType});
+      toast("Saved \u2713");
+    }
+    closeModal("m-tx");
+    await openDetail(curEmpId);
+  } catch(e) { toast("Error: "+e.message); }
+}
+
+/* ── DELETE TRANSACTION ── */
+function askDeleteTx(txId) {
+  document.getElementById("m-confirm-title").textContent = "Delete transaction?";
+  document.getElementById("m-confirm-msg").textContent = "This transaction will be permanently removed. This cannot be undone.";
+  document.getElementById("m-confirm-ok").onclick = async () => {
+    try {
+      await api("DELETE","transactions",null,"id=eq."+txId);
+      toast("Deleted");
+      closeModal("m-confirm");
+      await openDetail(curEmpId);
+    } catch(e) { toast("Error: "+e.message); }
+  };
+  openModal("m-confirm");
+}
+
+/* INIT */
 renderHome();
-<\/script>
+</script>
 </body>
 </html>
