@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" href="icon.png">
 <title>Staff Tracker</title>
 <style>
-:root{--bg:#F8F8F6;--surface:#FFFFFF;--surface2:#F0F0ED;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);--text:#1C1C1A;--text-s:#6E6E69;--text-h:#ADADAA;--accent:#2C2C2A;--accent-l:#EEEEED;--pay-btn-bg:#2C2C2A;--green:#2A5C42;--green-l:#E4F0EA;--red:#8B2020;--red-l:#F5EAEA;--amber:#7A5000;--amber-l:#FDF3E0;--blue:#1E3A5F;--blue-l:#E8F0FA;--r:16px;--rs:12px;--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',sans-serif}
-.dark{--bg:#111110;--surface:#1C1C1A;--surface2:#252523;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0F0ED;--text-s:#8A8A85;--text-h:#4A4A48;--accent:#BBBBB0;--accent-l:#252523;--pay-btn-bg:#3A3A36;--green:#4CAF80;--green-l:#1A2E24;--red:#E07070;--red-l:#2E1A1A;--amber:#E0A840;--amber-l:#2E2210;--blue:#6B9FD4;--blue-l:#141E2E}
+:root{--bg:#F8F8F6;--surface:#FFFFFF;--surface2:#F0F0ED;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);--text:#1C1C1A;--text-s:#6E6E69;--text-h:#ADADAA;--accent:#2C2C2A;--accent-l:#EEEEED;--pay-btn-bg:#2C2C2A;--btn-bg:#2C2C2A;--btn-text:#FFFFFF;--green:#2A5C42;--green-l:#E4F0EA;--red:#8B2020;--red-l:#F5EAEA;--amber:#7A5000;--amber-l:#FDF3E0;--blue:#1E3A5F;--blue-l:#E8F0FA;--r:16px;--rs:12px;--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',sans-serif}
+.dark{--bg:#111110;--surface:#1C1C1A;--surface2:#252523;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0F0ED;--text-s:#8A8A85;--text-h:#4A4A48;--accent:#BBBBB0;--accent-l:#252523;--pay-btn-bg:#3A3A36;--btn-bg:#E8E8E2;--btn-text:#1C1C1A;--green:#4CAF80;--green-l:#1A2E24;--red:#E07070;--red-l:#2E1A1A;--amber:#E0A840;--amber-l:#2E2210;--blue:#6B9FD4;--blue-l:#141E2E}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto}
 .screen{display:none;flex-direction:column;min-height:100vh}.screen.active{display:flex}
@@ -21,7 +21,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .ibtn:active{opacity:0.6}
 .ibtn.danger{background:var(--red-l);color:var(--red)}
 .toggle{width:44px;height:26px;border-radius:99px;background:var(--surface2);border:0.5px solid var(--border2);cursor:pointer;position:relative;flex-shrink:0;transition:background 0.25s}
-.toggle.on{background:var(--accent)}
+.toggle.on{background:var(--btn-bg)}
 .toggle-knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 .toggle.on .toggle-knob{left:20px}
 .body{padding:16px;flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-bottom:48px}
@@ -83,15 +83,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .fg{margin-bottom:14px}
 .fl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-s);margin-bottom:8px;display:block}
 .fi{width:100%;padding:13px 14px;border:0.5px solid var(--border2);border-radius:var(--rs);font-size:15px;font-family:var(--font);background:var(--bg);color:var(--text);outline:none}
-.fi:focus{border-color:var(--accent);border-width:1.5px}
+.fi:focus{border-color:var(--btn-bg);border-width:1.5px}
 .msel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .mopt{border:0.5px solid var(--border2);border-radius:var(--rs);padding:11px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);background:var(--surface);color:var(--text-s);line-height:1.5}
-.mopt.sel{border:1.5px solid var(--accent);background:var(--accent-l);color:var(--accent)}
+.mopt.sel{border:1.5px solid var(--btn-bg);background:var(--accent-l);color:var(--btn-bg)}
 .split-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .split-lbl{font-size:11px;font-weight:600;color:var(--text-s);margin-bottom:6px}
 .modal-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px}
 .btn-cancel{padding:14px;border:0.5px solid var(--border2);border-radius:var(--rs);background:none;font-size:15px;font-family:var(--font);color:var(--text-s);cursor:pointer;font-weight:500}
-.btn-save{padding:14px;border:none;border-radius:var(--rs);background:var(--accent);font-size:15px;font-family:var(--font);color:#fff;cursor:pointer;font-weight:600}
+.btn-save{padding:14px;border:none;border-radius:var(--rs);background:var(--btn-bg);font-size:15px;font-family:var(--font);color:var(--btn-text);cursor:pointer;font-weight:600}
 .btn-del{padding:14px;border:none;border-radius:var(--rs);background:var(--red);font-size:15px;font-family:var(--font);color:#fff;cursor:pointer;font-weight:600}
 .info-box{background:var(--blue-l);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.5;margin-bottom:14px}
 .toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:11px 22px;border-radius:99px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:200;white-space:nowrap}
@@ -139,7 +139,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <option value="sinhala">Sinhala</option>
         <option value="hindi">Hindi</option>
         <option value="bengali">Bengali</option>
-        <option value="arabic">Arabic</option>
         <option value="amharic">Amharic (Ethiopian)</option>
       </select>
     </div>
@@ -245,23 +244,31 @@ const LABELS = {
   sinhala: {title:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4\u0DCA \u0DB4\u0DAD\u0DCA\u200D\u0DBB\u0DD2\u0D9A\u0DCF\u0DC0',salary:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',loanRep:'\u0DAB\u0DBA \u0D9C\u0DD9\u0DC0\u0DD3\u0DB8',salPaid:'\u0D9C\u0DD9\u0DC5\u0DD6 \u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',balance:'\u0DC1\u0DDA\u0DC2\u0DBA',loanBal:'\u0DAB\u0DBA \u0DC1\u0DDA\u0DC2\u0DBA',cash:'\u0DB1\u0DC4',wu:'W.Union'},
   hindi: {title:'\u0935\u0947\u0924\u0928 \u092A\u0930\u094D\u091A\u0940',salary:'\u0935\u0947\u0924\u0928',loanRep:'\u0939\u093F\u0938\u094D\u0938\u093E',salPaid:'\u0935\u0947\u0924\u0928 \u092D\u0941\u0917\u0924\u093E\u0928',balance:'\u0936\u0947\u0937',loanBal:'\u0939\u0932\u094D\u0915',cash:'\u0928\u0915\u0926',wu:'W.Union'},
   bengali: {title:'\u09AC\u09C7\u09A4\u09A8 \u09B8\u09CD\u09B2\u09BF\u09AA',salary:'\u09AC\u09C7\u09A4\u09A8',loanRep:'\u0995\u09BF\u09B8\u09CD\u09A4\u09BF',salPaid:'\u09AC\u09C7\u09A4\u09A8 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7',balance:'\u09AC\u09BE\u0995\u09BF',loanBal:'\u0993\u09A3',cash:'\u09A8\u0997\u09A6',wu:'W.Union'},
-  arabic: {title:'\u0643\u0634\u0641 \u0627\u0644\u0631\u0627\u062A\u0628',salary:'\u0627\u0644\u0631\u0627\u062A\u0628',loanRep:'\u0633\u062F\u0627\u062F \u0642\u0631\u0636',salPaid:'\u0631\u0627\u062A\u0628 \u0645\u062F\u0641\u0648\u0639',balance:'\u0627\u0644\u0645\u062A\u0628\u0642\u064A',loanBal:'\u0631\u0635\u064A\u062F \u0627\u0644\u0642\u0631\u0636',cash:'\u0646\u0642\u062F\u0627\u064B',wu:'W.Union'},
   amharic: {title:'\u12E8\u12F0\u1218\u12C8\u12DD \u12F0\u1228\u1230\u129D',salary:'\u12E8\u12F0\u1218\u12C8\u12DD',loanRep:'\u12E8\u1265\u12F5\u122D \u1235\u122D\u12DB',salPaid:'\u12E8\u12F0\u1218\u12C8\u12DD \u1265\u12F5\u122D',balance:'\u1240\u122A \u1215\u1233\u1265',loanBal:'\u12E8\u1265\u12F5\u122D \u1240\u122A',cash:'\u1260\u1290\u1240\u12F5',wu:'W.Union'}
 };
 
-function fmtShortDate(dateStr) {
+var MONTHS = {
+  english:  ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+  sinhala:  ['ජන','පෙබ','මාර්','අප්‍ර','මැයි','ජූනි','ජූලි','අගෝ','සැප්','ඔක්','නොවැ','දෙසැ'],
+  hindi:    ['जन','फर','मार्च','अप्रैल','मई','जून','जुलाई','अग','सितं','अक्टू','नवं','दिसं'],
+  bengali:  ['জান','ফেব','মার্চ','এপ্রি','মে','জুন','জুলাই','আগ','সেপ্ট','অক্টো','নভে','ডিসে'],
+  amharic:  ['ጃን','ፌብ','ማርች','ኤፕ','ሜይ','ጁን','ጁላ','ኦገስ','ሴፕ','ኦክቶ','ኖቬ','ዲሴ']
+};
+
+function fmtShortDate(dateStr, lang) {
   if (!dateStr) return '';
   var d = new Date(dateStr + 'T12:00:00');
-  return d.getDate() + ' ' + d.toLocaleString('default', {month:'short'});
+  var months = MONTHS[lang] || MONTHS.english;
+  return d.getDate() + ' ' + months[d.getMonth()];
 }
 
-function buildMsg(emp, d, lbl) {
+function buildMsg(emp, d, lbl, lang) {
   var m = '\uD83D\uDCCB *' + lbl.title + ' \u2014 ' + d.month + '*\n';
   m += '\uD83D\uDC64 *' + emp.name + '*\n\n';
   m += '\uD83D\uDCB0 ' + lbl.salary + ': KWD ' + d.sal + '\n\n';
   // advances - method + date, split becomes two lines
   d.advances.forEach(function(a) {
-    var dt = a.date ? ' ' + fmtShortDate(a.date) : '';
+    var dt = a.date ? ' ' + fmtShortDate(a.date, lang) : '';
     if (a.pm === 'split') {
       var cashAmt = Math.round(Number(a.amount) - Number(a.amount2||0));
       var wuAmt = Math.round(Number(a.amount2||0));
@@ -274,7 +281,7 @@ function buildMsg(emp, d, lbl) {
   });
   // salary payments - method + date, split becomes two lines
   d.salaryPaid.forEach(function(sp) {
-    var dt = sp.date ? ' ' + fmtShortDate(sp.date) : '';
+    var dt = sp.date ? ' ' + fmtShortDate(sp.date, lang) : '';
     if (sp.pm === 'split') {
       var cashAmt = Math.round(Number(sp.amount) - Number(sp.amount2||0));
       var wuAmt = Math.round(Number(sp.amount2||0));
@@ -618,7 +625,7 @@ async function sendPayslip() {
     };
     var lang = emp.language || "english";
     var lbl = LABELS[lang] || LABELS.english;
-    var msg = buildMsg(emp, d, lbl);
+    var msg = buildMsg(emp, d, lbl, lang);
     var phone = emp.phone.replace(/\D/g, "");
     var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg);
     window.open(url, "_blank");
