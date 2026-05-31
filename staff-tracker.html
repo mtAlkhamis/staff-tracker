@@ -131,6 +131,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="fg"><label class="fl">Role</label><input class="fi" id="f-role" type="text" placeholder="e.g. Driver, Housekeeper"></div>
     <div class="fg"><label class="fl">Monthly salary (KWD)</label><input class="fi" id="f-salary" type="number" inputmode="decimal" placeholder="130"></div>
     <div class="fg"><label class="fl">Current loan balance (KWD)</label><input class="fi" id="f-loan" type="number" inputmode="decimal" placeholder="0"></div>
+    <div class="fg"><label class="fl">WhatsApp number (with country code)</label><input class="fi" id="f-phone" type="tel" placeholder="e.g. 96599123456"></div>
+    <div class="fg"><label class="fl">Payslip language</label><select class="fi" id="f-lang"><option value="english">English</option><option value="sinhala">Sinhala</option><option value="hindi">Hindi</option><option value="bengali">Bengali</option><option value="arabic">Arabic</option><option value="amharic">Amharic (Ethiopian)</option></select></div>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="closeModal('m-emp')">Cancel</button>
       <button class="btn-save" onclick="saveEmp()">Save</button>
@@ -217,7 +219,139 @@ function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t
 function selMethod(m){txMethod=m;["cash","wu"].forEach(x=>document.getElementById("m-"+x).classList.toggle("sel",x===m));document.getElementById("m-split").classList.remove("sel");}
 function goSplit(){isSplit=true;document.getElementById("tx-single").style.display="none";document.getElementById("tx-split").style.display="block";document.getElementById("f-cash").value="";document.getElementById("f-wu").value="";}
 function goSingle(){isSplit=false;document.getElementById("tx-single").style.display="block";document.getElementById("tx-split").style.display="none";selMethod("cash");}
-async function goHome(){show("s-home");await renderHome();}
+async function goHome(){show("s-home");await 
+const PAYSLIP_TEMPLATES = {
+  english: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *Salary Payslip — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 Salary:          KWD ${sal}\n`;
+    if(adv)  msg += `➖ Advances:        KWD ${adv}\n`;
+    if(ded)  msg += `➖ Deductions:      KWD ${ded}\n`;
+    if(lrp)  msg += `➖ Loan repayment:  KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ Already paid:   KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *Balance due: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 Remaining loan: KWD ${loan}`;
+    return msg;
+  },
+  sinhala: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *වැටුප් පත්‍රිකාව — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 වැටුප:           KWD ${sal}\n`;
+    if(adv)  msg += `➖ අත්තිකාරම්:      KWD ${adv}\n`;
+    if(ded)  msg += `➖ කැපීම්:          KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ණය ගෙවීම:       KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ ගෙවූ මුදල:      KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *ශේෂය: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 ඉතිරි ණය: KWD ${loan}`;
+    return msg;
+  },
+  hindi: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *वेतन पर्ची — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 वेतन:            KWD ${sal}\n`;
+    if(adv)  msg += `➖ अग्रिम:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ कटौती:           KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ऋण भुगतान:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ भुगतान किया:    KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *शेष राशि: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 बकाया ऋण: KWD ${loan}`;
+    return msg;
+  },
+  bengali: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *বেতন স্লিপ — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 বেতন:            KWD ${sal}\n`;
+    if(adv)  msg += `➖ অগ্রিম:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ কর্তন:           KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ঋণ পরিশোধ:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ পরিশোধিত:      KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *বকেয়া: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 বাকি ঋণ: KWD ${loan}`;
+    return msg;
+  },
+  arabic: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *كشف الراتب — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 الراتب:          KWD ${sal}\n`;
+    if(adv)  msg += `➖ السلفة:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ الخصومات:        KWD ${ded}\n`;
+    if(lrp)  msg += `➖ سداد القرض:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ المدفوع:        KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *المبلغ المتبقي: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 رصيد القرض: KWD ${loan}`;
+    return msg;
+  },
+  amharic: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *የደመወዝ ደረሰኝ — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 ደመወዝ:           KWD ${sal}\n`;
+    if(adv)  msg += `➖ የቅድሚያ ክፍያ:    KWD ${adv}\n`;
+    if(ded)  msg += `➖ ቅናሽ:            KWD ${ded}\n`;
+    if(lrp)  msg += `➖ የብድር ክፍያ:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ የተከፈለ:        KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *ቀሪ ሒሳብ: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 የብድር ቀሪ: KWD ${loan}`;
+    return msg;
+  }
+};
+
+async function sendPayslip() {
+  const emp = emps.find(e=>e.id===curEmpId);
+  if (!emp.phone) {
+    toast("Please add a phone number in employee settings");
+    openEditEmp();
+    return;
+  }
+  // get latest data
+  const allTx = await api("GET","transactions",null,"employee_id=eq."+curEmpId+"&order=date.desc,created_at.desc");
+  const mTx = allTx.filter(t=>t.month===viewMonth);
+  const adv = mTx.filter(t=>t.type==="advance").reduce((s,t)=>s+Number(t.amount||0),0);
+  const ded = mTx.filter(t=>t.type==="deduction").reduce((s,t)=>s+Number(t.amount||0),0);
+  const lrp = mTx.filter(t=>t.type==="loan_payment").reduce((s,t)=>s+Number(t.amount||0),0);
+  const salPaid = mTx.filter(t=>t.type==="salary").reduce((s,t)=>s+Number(t.amount||0),0);
+  const net = Number(emp.salary)-adv-ded-lrp-salPaid;
+  let loan = Number(emp.initial_loan||0);
+  allTx.forEach(t=>{if(t.type==="loan")loan+=Number(t.amount||0);if(t.type==="loan_payment")loan-=Number(t.amount||0);});
+  loan = Math.max(0,loan);
+
+  const data = {
+    sal: Math.round(emp.salary),
+    adv: Math.round(adv),
+    ded: Math.round(ded),
+    lrp: Math.round(lrp),
+    salPaid: Math.round(salPaid),
+    net: Math.round(net),
+    loan: Math.round(loan),
+    month: fmtM(viewMonth)
+  };
+
+  const lang = emp.language || "english";
+  const tmpl = PAYSLIP_TEMPLATES[lang] || PAYSLIP_TEMPLATES.english;
+  const msg = tmpl(emp, data);
+  const phone = emp.phone.replace(/\D/g,"");
+  const url = "https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+
+renderHome();}
 async function renderHome(){
   document.getElementById("home-sub").textContent=fmtM(viewMonth);
   const body=document.getElementById("home-body");
@@ -241,7 +375,139 @@ async function renderHome(){
     body.innerHTML=h;
   }catch(e){body.innerHTML='<div class="empty">Connection error.<br><small>'+e.message+'</small></div>';}
 }
-function chMonth(d){const[y,m]=viewMonth.split("-").map(Number);viewMonth=mk(new Date(y,m-1+d,1));renderHome();}
+function chMonth(d){const[y,m]=viewMonth.split("-").map(Number);viewMonth=mk(new Date(y,m-1+d,1));
+const PAYSLIP_TEMPLATES = {
+  english: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *Salary Payslip — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 Salary:          KWD ${sal}\n`;
+    if(adv)  msg += `➖ Advances:        KWD ${adv}\n`;
+    if(ded)  msg += `➖ Deductions:      KWD ${ded}\n`;
+    if(lrp)  msg += `➖ Loan repayment:  KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ Already paid:   KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *Balance due: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 Remaining loan: KWD ${loan}`;
+    return msg;
+  },
+  sinhala: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *වැටුප් පත්‍රිකාව — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 වැටුප:           KWD ${sal}\n`;
+    if(adv)  msg += `➖ අත්තිකාරම්:      KWD ${adv}\n`;
+    if(ded)  msg += `➖ කැපීම්:          KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ණය ගෙවීම:       KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ ගෙවූ මුදල:      KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *ශේෂය: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 ඉතිරි ණය: KWD ${loan}`;
+    return msg;
+  },
+  hindi: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *वेतन पर्ची — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 वेतन:            KWD ${sal}\n`;
+    if(adv)  msg += `➖ अग्रिम:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ कटौती:           KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ऋण भुगतान:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ भुगतान किया:    KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *शेष राशि: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 बकाया ऋण: KWD ${loan}`;
+    return msg;
+  },
+  bengali: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *বেতন স্লিপ — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 বেতন:            KWD ${sal}\n`;
+    if(adv)  msg += `➖ অগ্রিম:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ কর্তন:           KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ঋণ পরিশোধ:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ পরিশোধিত:      KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *বকেয়া: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 বাকি ঋণ: KWD ${loan}`;
+    return msg;
+  },
+  arabic: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *كشف الراتب — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 الراتب:          KWD ${sal}\n`;
+    if(adv)  msg += `➖ السلفة:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ الخصومات:        KWD ${ded}\n`;
+    if(lrp)  msg += `➖ سداد القرض:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ المدفوع:        KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *المبلغ المتبقي: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 رصيد القرض: KWD ${loan}`;
+    return msg;
+  },
+  amharic: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *የደመወዝ ደረሰኝ — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 ደመወዝ:           KWD ${sal}\n`;
+    if(adv)  msg += `➖ የቅድሚያ ክፍያ:    KWD ${adv}\n`;
+    if(ded)  msg += `➖ ቅናሽ:            KWD ${ded}\n`;
+    if(lrp)  msg += `➖ የብድር ክፍያ:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ የተከፈለ:        KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *ቀሪ ሒሳብ: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 የብድር ቀሪ: KWD ${loan}`;
+    return msg;
+  }
+};
+
+async function sendPayslip() {
+  const emp = emps.find(e=>e.id===curEmpId);
+  if (!emp.phone) {
+    toast("Please add a phone number in employee settings");
+    openEditEmp();
+    return;
+  }
+  // get latest data
+  const allTx = await api("GET","transactions",null,"employee_id=eq."+curEmpId+"&order=date.desc,created_at.desc");
+  const mTx = allTx.filter(t=>t.month===viewMonth);
+  const adv = mTx.filter(t=>t.type==="advance").reduce((s,t)=>s+Number(t.amount||0),0);
+  const ded = mTx.filter(t=>t.type==="deduction").reduce((s,t)=>s+Number(t.amount||0),0);
+  const lrp = mTx.filter(t=>t.type==="loan_payment").reduce((s,t)=>s+Number(t.amount||0),0);
+  const salPaid = mTx.filter(t=>t.type==="salary").reduce((s,t)=>s+Number(t.amount||0),0);
+  const net = Number(emp.salary)-adv-ded-lrp-salPaid;
+  let loan = Number(emp.initial_loan||0);
+  allTx.forEach(t=>{if(t.type==="loan")loan+=Number(t.amount||0);if(t.type==="loan_payment")loan-=Number(t.amount||0);});
+  loan = Math.max(0,loan);
+
+  const data = {
+    sal: Math.round(emp.salary),
+    adv: Math.round(adv),
+    ded: Math.round(ded),
+    lrp: Math.round(lrp),
+    salPaid: Math.round(salPaid),
+    net: Math.round(net),
+    loan: Math.round(loan),
+    month: fmtM(viewMonth)
+  };
+
+  const lang = emp.language || "english";
+  const tmpl = PAYSLIP_TEMPLATES[lang] || PAYSLIP_TEMPLATES.english;
+  const msg = tmpl(emp, data);
+  const phone = emp.phone.replace(/\D/g,"");
+  const url = "https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+
+renderHome();}
 async function openDetail(empId){
   curEmpId=empId;show("s-detail");
   const body=document.getElementById("detail-body");
@@ -271,6 +537,7 @@ async function openDetail(empId){
     h+='</div>';
     h+='<div class="act-grid"><button class="act-btn" onclick="openTx(\'advance\')"><span class="act-ico">&#128181;</span>Give advance</button><button class="act-btn" onclick="openTx(\'loan\')"><span class="act-ico">&#128203;</span>Add loan</button><button class="act-btn" onclick="openTx(\'deduction\')"><span class="act-ico">&#10134;</span>Add deduction</button><button class="act-btn" onclick="openTx(\'loan_payment\')"><span class="act-ico">&#128184;</span>Loan repayment</button></div>';
     h+='<button class="pay-btn" onclick="openTx(\'salary\')">&#10003;&nbsp; Pay salary balance &nbsp;('+fmtK(Math.max(0,net))+')</button>';
+    h+='<button onclick="sendPayslip()" style="background:var(--green-l);border:none;border-radius:var(--rs);padding:14px;width:100%;cursor:pointer;font-size:14px;font-family:var(--font);color:var(--green);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;">&#128172;&nbsp; Send payslip via WhatsApp</button>';
     h+='<div class="sec-lbl">Transaction history</div>';
     if(!allTx.length){h+='<div class="empty" style="padding:24px">No transactions yet</div>';}
     else{
@@ -286,15 +553,15 @@ async function openDetail(empId){
     body.innerHTML=h;
   }catch(e){body.innerHTML='<div class="empty">Error: '+e.message+'</div>';}
 }
-function openAddEmp(){editEmpId=null;document.getElementById("m-emp-title").textContent="Add employee";["f-name","f-role","f-salary","f-loan"].forEach(id=>document.getElementById(id).value="");openModal("m-emp");}
-function openEditEmp(){const emp=emps.find(e=>e.id===curEmpId);editEmpId=emp.id;document.getElementById("m-emp-title").textContent="Edit employee";document.getElementById("f-name").value=emp.name;document.getElementById("f-role").value=emp.role||"";document.getElementById("f-salary").value=emp.salary;document.getElementById("f-loan").value=emp.initial_loan||0;openModal("m-emp");}
+function openAddEmp(){editEmpId=null;document.getElementById("m-emp-title").textContent="Add employee";["f-name","f-role","f-salary","f-loan","f-phone"].forEach(id=>document.getElementById(id).value="");document.getElementById("f-lang").value="english";openModal("m-emp");}
+function openEditEmp(){const emp=emps.find(e=>e.id===curEmpId);editEmpId=emp.id;document.getElementById("m-emp-title").textContent="Edit employee";document.getElementById("f-name").value=emp.name;document.getElementById("f-role").value=emp.role||"";document.getElementById("f-salary").value=emp.salary;document.getElementById("f-loan").value=emp.initial_loan||0;document.getElementById("f-phone").value=emp.phone||"";document.getElementById("f-lang").value=emp.language||"english";openModal("m-emp");}
 async function saveEmp(){
   const name=document.getElementById("f-name").value.trim(),role=document.getElementById("f-role").value.trim();
-  const salary=parseFloat(document.getElementById("f-salary").value)||0,initial_loan=parseFloat(document.getElementById("f-loan").value)||0;
+  const salary=parseFloat(document.getElementById("f-salary").value)||0,initial_loan=parseFloat(document.getElementById("f-loan").value)||0,phone=document.getElementById("f-phone").value.trim(),language=document.getElementById("f-lang").value;
   if(!name||!salary){toast("Please enter name and salary");return;}
   try{
-    if(editEmpId){await api("PATCH","employees",{name,role,salary,initial_loan},"id=eq."+editEmpId);toast("Updated \u2713");}
-    else{await api("POST","employees",{name,role,salary,initial_loan});toast("Employee added \u2713");}
+    if(editEmpId){await api("PATCH","employees",{name,role,salary,initial_loan,phone,language},"id=eq."+editEmpId);toast("Updated \u2713");}
+    else{await api("POST","employees",{name,role,salary,initial_loan,phone,language});toast("Employee added \u2713");}
     closeModal("m-emp");await goHome();if(editEmpId){curEmpId=editEmpId;await openDetail(editEmpId);}
   }catch(e){toast("Error: "+e.message);}
 }
@@ -350,6 +617,138 @@ function askDeleteTx(txId){
   document.getElementById("m-confirm-ok").onclick=async()=>{try{await api("DELETE","transactions",null,"id=eq."+txId);toast("Deleted");closeModal("m-confirm");await openDetail(curEmpId);}catch(e){toast("Error: "+e.message);}};
   openModal("m-confirm");
 }
+
+const PAYSLIP_TEMPLATES = {
+  english: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *Salary Payslip — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 Salary:          KWD ${sal}\n`;
+    if(adv)  msg += `➖ Advances:        KWD ${adv}\n`;
+    if(ded)  msg += `➖ Deductions:      KWD ${ded}\n`;
+    if(lrp)  msg += `➖ Loan repayment:  KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ Already paid:   KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *Balance due: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 Remaining loan: KWD ${loan}`;
+    return msg;
+  },
+  sinhala: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *වැටුප් පත්‍රිකාව — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 වැටුප:           KWD ${sal}\n`;
+    if(adv)  msg += `➖ අත්තිකාරම්:      KWD ${adv}\n`;
+    if(ded)  msg += `➖ කැපීම්:          KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ණය ගෙවීම:       KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ ගෙවූ මුදල:      KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *ශේෂය: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 ඉතිරි ණය: KWD ${loan}`;
+    return msg;
+  },
+  hindi: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *वेतन पर्ची — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 वेतन:            KWD ${sal}\n`;
+    if(adv)  msg += `➖ अग्रिम:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ कटौती:           KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ऋण भुगतान:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ भुगतान किया:    KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *शेष राशि: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 बकाया ऋण: KWD ${loan}`;
+    return msg;
+  },
+  bengali: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *বেতন স্লিপ — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 বেতন:            KWD ${sal}\n`;
+    if(adv)  msg += `➖ অগ্রিম:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ কর্তন:           KWD ${ded}\n`;
+    if(lrp)  msg += `➖ ঋণ পরিশোধ:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ পরিশোধিত:      KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *বকেয়া: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 বাকি ঋণ: KWD ${loan}`;
+    return msg;
+  },
+  arabic: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *كشف الراتب — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 الراتب:          KWD ${sal}\n`;
+    if(adv)  msg += `➖ السلفة:          KWD ${adv}\n`;
+    if(ded)  msg += `➖ الخصومات:        KWD ${ded}\n`;
+    if(lrp)  msg += `➖ سداد القرض:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ المدفوع:        KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *المبلغ المتبقي: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 رصيد القرض: KWD ${loan}`;
+    return msg;
+  },
+  amharic: (emp, data) => {
+    const {sal, adv, ded, lrp, salPaid, net, loan, month} = data;
+    let msg = `📋 *የደመወዝ ደረሰኝ — ${month}*\n\n`;
+    msg += `👤 *${emp.name}*\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💰 ደመወዝ:           KWD ${sal}\n`;
+    if(adv)  msg += `➖ የቅድሚያ ክፍያ:    KWD ${adv}\n`;
+    if(ded)  msg += `➖ ቅናሽ:            KWD ${ded}\n`;
+    if(lrp)  msg += `➖ የብድር ክፍያ:      KWD ${lrp}\n`;
+    if(salPaid) msg += `✅ የተከፈለ:        KWD ${salPaid}\n`;
+    msg += `━━━━━━━━━━━━━━━\n`;
+    msg += `💵 *ቀሪ ሒሳብ: KWD ${net}*\n`;
+    if(loan) msg += `\n📌 የብድር ቀሪ: KWD ${loan}`;
+    return msg;
+  }
+};
+
+async function sendPayslip() {
+  const emp = emps.find(e=>e.id===curEmpId);
+  if (!emp.phone) {
+    toast("Please add a phone number in employee settings");
+    openEditEmp();
+    return;
+  }
+  // get latest data
+  const allTx = await api("GET","transactions",null,"employee_id=eq."+curEmpId+"&order=date.desc,created_at.desc");
+  const mTx = allTx.filter(t=>t.month===viewMonth);
+  const adv = mTx.filter(t=>t.type==="advance").reduce((s,t)=>s+Number(t.amount||0),0);
+  const ded = mTx.filter(t=>t.type==="deduction").reduce((s,t)=>s+Number(t.amount||0),0);
+  const lrp = mTx.filter(t=>t.type==="loan_payment").reduce((s,t)=>s+Number(t.amount||0),0);
+  const salPaid = mTx.filter(t=>t.type==="salary").reduce((s,t)=>s+Number(t.amount||0),0);
+  const net = Number(emp.salary)-adv-ded-lrp-salPaid;
+  let loan = Number(emp.initial_loan||0);
+  allTx.forEach(t=>{if(t.type==="loan")loan+=Number(t.amount||0);if(t.type==="loan_payment")loan-=Number(t.amount||0);});
+  loan = Math.max(0,loan);
+
+  const data = {
+    sal: Math.round(emp.salary),
+    adv: Math.round(adv),
+    ded: Math.round(ded),
+    lrp: Math.round(lrp),
+    salPaid: Math.round(salPaid),
+    net: Math.round(net),
+    loan: Math.round(loan),
+    month: fmtM(viewMonth)
+  };
+
+  const lang = emp.language || "english";
+  const tmpl = PAYSLIP_TEMPLATES[lang] || PAYSLIP_TEMPLATES.english;
+  const msg = tmpl(emp, data);
+  const phone = emp.phone.replace(/\D/g,"");
+  const url = "https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+
 renderHome();
 </script>
 </body>
