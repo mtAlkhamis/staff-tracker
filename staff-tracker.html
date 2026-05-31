@@ -8,96 +8,97 @@
 <meta name="apple-mobile-web-app-title" content="Staff">
 <link rel="apple-touch-icon" href="icon.png">
 <title>Staff Tracker</title>
-
 <style>
-:root{--bg:#F7F7F5;--bg2:#EFEFEC;--surface:#FFFFFF;--surface2:#F0F0ED;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.13);--text:#1C1C1A;--text-s:#6E6E69;--text-h:#ADADAA;--accent:#3D3D38;--accent-l:#EEEEED;--green:#2A6048;--green-l:#E6F2EC;--red:#8B2020;--red-l:#F5EAEA;--amber:#7A5000;--amber-l:#FDF3E0;--blue:#1E3A5F;--blue-l:#E8F0FA;--shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--r:14px;--rs:10px}
-.dark{--bg:#141412;--bg2:#1C1C1A;--surface:#1F1F1D;--surface2:#2A2A27;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0F0ED;--text-s:#9A9A95;--text-h:#5A5A57;--accent:#C8C8C0;--accent-l:#2A2A27;--green:#4CAF80;--green-l:#1A2E24;--red:#E07070;--red-l:#2E1A1A;--amber:#E0A840;--amber-l:#2E2210;--blue:#6B9FD4;--blue-l:#141E2E;--shadow:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 12px rgba(0,0,0,0.4)}
+:root{--bg:#F8F8F6;--surface:#FFFFFF;--surface2:#F0F0ED;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);--text:#1C1C1A;--text-s:#6E6E69;--text-h:#ADADAA;--accent:#2C2C2A;--accent-l:#EEEEED;--green:#2A5C42;--green-l:#E4F0EA;--red:#8B2020;--red-l:#F5EAEA;--amber:#7A5000;--amber-l:#FDF3E0;--blue:#1E3A5F;--blue-l:#E8F0FA;--r:16px;--rs:12px;--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',sans-serif}
+.dark{--bg:#111110;--surface:#1C1C1A;--surface2:#252523;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0F0ED;--text-s:#8A8A85;--text-h:#4A4A48;--accent:#BBBBB0;--accent-l:#252523;--green:#4CAF80;--green-l:#1A2E24;--red:#E07070;--red-l:#2E1A1A;--amber:#E0A840;--amber-l:#2E2210;--blue:#6B9FD4;--blue-l:#141E2E}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto;transition:background 0.25s,color 0.25s}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto}
 .screen{display:none;flex-direction:column;min-height:100vh}.screen.active{display:flex}
-.hdr{padding:52px 20px 14px;background:var(--bg);display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;border-bottom:1px solid var(--border);transition:background 0.25s,border-color 0.25s}
-.hdr-title{font-size:17px;font-weight:600;flex:1;letter-spacing:-0.4px}
-.hdr-sub{font-size:11px;color:var(--text-s);margin-top:1px}
-.ibtn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-s);flex-shrink:0;box-shadow:var(--shadow);transition:background 0.25s}
-.ibtn:active{opacity:0.7}
+.hdr{padding:54px 20px 14px;background:var(--bg);display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;border-bottom:0.5px solid var(--border2)}
+.hdr-title{font-size:18px;font-weight:700;flex:1;letter-spacing:-0.5px}
+.hdr-sub{font-size:11px;color:var(--text-s);margin-top:1px;font-weight:400}
+.ibtn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text-s);flex-shrink:0}
+.ibtn:active{opacity:0.6}
 .ibtn.danger{background:var(--red-l);color:var(--red)}
-.toggle{width:44px;height:26px;border-radius:99px;background:var(--surface2);border:1.5px solid var(--border2);cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s,border-color 0.3s}
-.toggle.on{background:var(--accent);border-color:var(--accent)}
-.toggle-knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.25)}
+.toggle{width:44px;height:26px;border-radius:99px;background:var(--surface2);border:0.5px solid var(--border2);cursor:pointer;position:relative;flex-shrink:0;transition:background 0.25s}
+.toggle.on{background:var(--accent)}
+.toggle-knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
 .toggle.on .toggle-knob{left:20px}
 .body{padding:16px;flex:1;display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-bottom:48px}
-.emp-card{background:var(--surface);border-radius:var(--r);padding:15px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;border:1px solid var(--border);box-shadow:var(--shadow);transition:background 0.25s,border-color 0.25s}
-.emp-card:active{opacity:0.75;transform:scale(0.99)}
-.avatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
-.emp-name{font-size:15px;font-weight:600;letter-spacing:-0.2px}
-.emp-role{font-size:12px;color:var(--text-s);margin-top:2px}
+.emp-card{background:var(--surface);border-radius:var(--r);padding:15px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;border:0.5px solid var(--border2)}
+.emp-card:active{opacity:0.7}
+.avatar{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;letter-spacing:0.3px}
+.emp-name{font-size:15px;font-weight:600;letter-spacing:-0.3px}
+.emp-role{font-size:12px;color:var(--text-s);margin-top:2px;font-weight:400}
 .emp-right{text-align:right;flex-shrink:0}
-.emp-net{font-size:15px;font-weight:600;letter-spacing:-0.3px}
-.emp-net-lbl{font-size:11px;color:var(--text-h);margin-top:2px}
-.month-nav{background:var(--surface);border-radius:var(--rs);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);box-shadow:var(--shadow);transition:background 0.25s}
-.mnav-btn{background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-s);padding:2px 10px}
-.mnav-lbl{font-size:13px;font-weight:600;letter-spacing:-0.2px}
+.emp-net{font-size:15px;font-weight:700;letter-spacing:-0.4px}
+.emp-net-lbl{font-size:11px;color:var(--text-h);margin-top:2px;font-weight:400}
+.month-nav{background:var(--surface);border-radius:var(--rs);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;border:0.5px solid var(--border2)}
+.mnav-btn{background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-s);padding:0 8px;line-height:1}
+.mnav-lbl{font-size:14px;font-weight:600;letter-spacing:-0.3px}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stat{background:var(--surface);border-radius:var(--rs);padding:14px;border:1px solid var(--border);box-shadow:var(--shadow);transition:background 0.25s}
-.stat-lbl{font-size:10px;font-weight:600;color:var(--text-h);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
-.stat-val{font-size:18px;font-weight:700;letter-spacing:-0.5px}
-.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.a{color:var(--amber)}.stat-val.n{color:var(--text)}
-.payslip{background:var(--surface);border-radius:var(--r);padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);transition:background 0.25s}
-.ps-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-h);margin-bottom:14px}
-.ps-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.stat{background:var(--surface);border-radius:var(--rs);padding:14px;border:0.5px solid var(--border2)}
+.stat-lbl{font-size:10px;font-weight:600;color:var(--text-h);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:7px}
+.stat-val{font-size:20px;font-weight:700;letter-spacing:-0.5px}
+.g{color:var(--green)}.r{color:var(--red)}.a{color:var(--amber)}.n{color:var(--text)}
+.payslip{background:var(--surface);border-radius:var(--r);padding:16px;border:0.5px solid var(--border2)}
+.ps-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-h);margin-bottom:14px}
+.ps-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:14px}
 .ps-row:last-child{border-bottom:none}
-.ps-row.total{font-weight:700;font-size:14px;padding-top:10px}
-.ps-lbl{color:var(--text-s)}.ps-row.total .ps-lbl{color:var(--text)}
+.ps-row.total{font-weight:700;font-size:15px;padding-top:10px}
+.ps-lbl{color:var(--text-s);font-weight:400}
+.ps-row.total .ps-lbl{color:var(--text);font-weight:600}
 .neg{color:var(--red)}.pos{color:var(--green)}.warn{color:var(--amber)}.mono{color:var(--text)}
 .act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.act-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:14px 10px;cursor:pointer;font-size:12px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:var(--text-s);display:flex;flex-direction:column;align-items:center;gap:7px;font-weight:500;box-shadow:var(--shadow);transition:background 0.2s}
+.act-btn{background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--rs);padding:14px 10px;cursor:pointer;font-size:13px;font-family:var(--font);color:var(--text-s);display:flex;flex-direction:column;align-items:center;gap:7px;font-weight:500}
 .act-btn:active{background:var(--surface2)}
 .act-ico{font-size:22px}
-.pay-btn{background:var(--accent);border:none;border-radius:var(--rs);padding:15px;width:100%;cursor:pointer;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-0.2px;box-shadow:var(--shadow-md);transition:background 0.25s}
-.pay-btn:active{opacity:0.85}
-.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-h);padding:6px 2px 2px}
-.tx-card{background:var(--surface);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:flex-start;gap:11px;border:1px solid var(--border);box-shadow:var(--shadow);transition:background 0.25s}
-.tx-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:1px}
+.pay-btn{background:var(--accent);border:none;border-radius:var(--rs);padding:15px;width:100%;cursor:pointer;font-size:15px;font-family:var(--font);color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-0.3px}
+.pay-btn:active{opacity:0.8}
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-h);padding:4px 2px 0}
+.tx-card{background:var(--surface);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:flex-start;gap:11px;border:0.5px solid var(--border2)}
+.tx-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;margin-top:1px}
 .tx-info{flex:1;min-width:0}
 .tx-type{font-size:13px;font-weight:600;letter-spacing:-0.2px}
-.tx-meta{font-size:11px;color:var(--text-h);margin-top:3px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.tx-meta{font-size:11px;color:var(--text-h);margin-top:3px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-weight:400}
 .tx-right{text-align:right;flex-shrink:0}
-.tx-amt{font-size:13px;font-weight:700;letter-spacing:-0.3px}
-.tx-month{font-size:10px;color:var(--text-h);margin-top:2px}
+.tx-amt{font-size:14px;font-weight:700;letter-spacing:-0.3px}
+.tx-month{font-size:10px;color:var(--text-h);margin-top:2px;font-weight:400}
 .tx-actions{margin-top:6px;display:flex;gap:5px;justify-content:flex-end}
-.tx-btn{background:var(--surface2);border:none;border-radius:6px;padding:3px 9px;cursor:pointer;font-size:11px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:var(--text-s);font-weight:500}
+.tx-btn{background:var(--surface2);border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:11px;font-family:var(--font);color:var(--text-s);font-weight:500}
 .tx-btn.del{background:var(--red-l);color:var(--red)}
-.pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:99px}
+.tx-btn:active{opacity:0.6}
+.pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px}
 .pill.cash{background:var(--green-l);color:var(--green)}.pill.wu{background:var(--amber-l);color:var(--amber)}.pill.split{background:var(--blue-l);color:var(--blue)}
-.add-btn{background:var(--surface);border:1.5px dashed var(--border2);border-radius:var(--r);padding:15px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:13px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:var(--text-s);font-weight:500;transition:background 0.2s}
+.add-btn{background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:15px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:13px;font-family:var(--font);color:var(--text-s);font-weight:500}
 .add-btn:active{background:var(--surface2)}
-.empty{text-align:center;padding:48px 20px;color:var(--text-h);font-size:14px;line-height:1.7}
-.empty-ico{font-size:38px;margin-bottom:12px;opacity:0.6}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+.empty{text-align:center;padding:48px 20px;color:var(--text-h);font-size:14px;line-height:1.7;font-weight:400}
+.empty-ico{font-size:36px;margin-bottom:12px;opacity:0.5}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:22px 22px 0 0;padding:22px 20px 40px;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;border-top:1px solid var(--border);transition:background 0.25s}
-.modal-handle{width:32px;height:3px;background:var(--border2);border-radius:99px;margin:0 auto 20px}
-.modal-title{font-size:17px;font-weight:700;margin-bottom:18px;letter-spacing:-0.4px}
-.fg{margin-bottom:13px}
-.fl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-s);margin-bottom:7px;display:block}
-.fi{width:100%;padding:12px 14px;border:1.5px solid var(--border2);border-radius:var(--rs);font-size:15px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);outline:none;transition:background 0.25s,border-color 0.2s}
-.fi:focus{border-color:var(--accent)}
-.msel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
-.mopt{border:1.5px solid var(--border2);border-radius:var(--rs);padding:10px 6px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;background:var(--surface);color:var(--text-s);line-height:1.5;transition:background 0.2s,border-color 0.2s}
-.mopt.sel{border-color:var(--accent);background:var(--accent-l);color:var(--accent)}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px 44px;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;border-top:0.5px solid var(--border2)}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:99px;margin:0 auto 22px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:20px;letter-spacing:-0.5px}
+.fg{margin-bottom:14px}
+.fl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-s);margin-bottom:8px;display:block}
+.fi{width:100%;padding:13px 14px;border:0.5px solid var(--border2);border-radius:var(--rs);font-size:15px;font-family:var(--font);background:var(--bg);color:var(--text);outline:none}
+.fi:focus{border-color:var(--accent);border-width:1.5px}
+.msel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.mopt{border:0.5px solid var(--border2);border-radius:var(--rs);padding:11px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);background:var(--surface);color:var(--text-s);line-height:1.5}
+.mopt.sel{border:1.5px solid var(--accent);background:var(--accent-l);color:var(--accent)}
 .split-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .split-lbl{font-size:11px;font-weight:600;color:var(--text-s);margin-bottom:6px}
-.modal-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
-.btn-cancel{padding:13px;border:1.5px solid var(--border2);border-radius:var(--rs);background:none;font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:var(--text-s);cursor:pointer;font-weight:500}
-.btn-save{padding:13px;border:none;border-radius:var(--rs);background:var(--accent);font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:#fff;cursor:pointer;font-weight:600}
-.btn-del{padding:13px;border:none;border-radius:var(--rs);background:var(--red);font-size:14px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:#fff;cursor:pointer;font-weight:600}
-.info-box{background:var(--blue-l);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.5;margin-bottom:14px}
-.toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:99px;font-size:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:200;white-space:nowrap}
+.modal-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px}
+.btn-cancel{padding:14px;border:0.5px solid var(--border2);border-radius:var(--rs);background:none;font-size:15px;font-family:var(--font);color:var(--text-s);cursor:pointer;font-weight:500}
+.btn-save{padding:14px;border:none;border-radius:var(--rs);background:var(--accent);font-size:15px;font-family:var(--font);color:#fff;cursor:pointer;font-weight:600}
+.btn-del{padding:14px;border:none;border-radius:var(--rs);background:var(--red);font-size:15px;font-family:var(--font);color:#fff;cursor:pointer;font-weight:600}
+.info-box{background:var(--blue-l);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.5;margin-bottom:14px;font-weight:400}
+.toast{position:fixed;bottom:36px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:11px 22px;border-radius:99px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:200;white-space:nowrap;letter-spacing:-0.2px}
 .toast.show{opacity:1}
 .loader{display:flex;align-items:center;justify-content:center;padding:48px}
 .spinner{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.c0{background:#EAE8E0;color:#3D3D38}.c1{background:#E0E8EA;color:#1E3A5F}.c2{background:#EAE0E0;color:#5F1E1E}.c3{background:#EAE6E0;color:#5F3A1E}.c4{background:#E0EAE2;color:#1E5F2A}
+.c0{background:#ECEAE2;color:#3D3D38}.c1{background:#DCE5E8;color:#1E3A5F}.c2{background:#EAE0E0;color:#5F1E1E}.c3{background:#EAE6DF;color:#5F3A1E}.c4{background:#DDE8E1;color:#1E5030}
 .dark .c0{background:#2A2A25;color:#C0C0B8}.dark .c1{background:#1A222A;color:#6B9FD4}.dark .c2{background:#2A1A1A;color:#E07070}.dark .c3{background:#2A221A;color:#E0A840}.dark .c4{background:#1A2A1E;color:#4CAF80}
 </style>
 </head>
@@ -106,7 +107,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 <div id="s-home" class="screen active">
   <div class="hdr">
     <div style="flex:1"><div class="hdr-title">Household Staff</div><div class="hdr-sub" id="home-sub"></div></div>
-    <span style="font-size:14px">🌙</span>
+    <span style="font-size:15px;margin-right:2px">🌙</span>
     <div class="toggle" id="dark-toggle" onclick="toggleDark()"><div class="toggle-knob"></div></div>
   </div>
   <div class="body" id="home-body"><div class="loader"><div class="spinner"></div></div></div>
@@ -142,7 +143,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
     <div class="modal-handle"></div>
     <div class="modal-title" id="m-tx-title">Add transaction</div>
     <div id="tx-single">
-      <div class="fg"><label class="fl">Amount (KWD)</label><input class="fi" id="f-amt" type="number" inputmode="decimal" placeholder="0.000"></div>
+      <div class="fg"><label class="fl">Amount (KWD)</label><input class="fi" id="f-amt" type="number" inputmode="decimal" placeholder="0"></div>
       <div class="fg" id="tx-method-group">
         <label class="fl">Payment method</label>
         <div class="msel">
@@ -155,14 +156,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
     <div id="tx-split" style="display:none">
       <div class="info-box">Enter how much was paid by each method.</div>
       <div class="split-row">
-        <div><div class="split-lbl">&#128181; Cash (KWD)</div><input class="fi" id="f-cash" type="number" inputmode="decimal" placeholder="0.000"></div>
-        <div><div class="split-lbl">&#127760; W. Union (KWD)</div><input class="fi" id="f-wu" type="number" inputmode="decimal" placeholder="0.000"></div>
+        <div><div class="split-lbl">&#128181; Cash (KWD)</div><input class="fi" id="f-cash" type="number" inputmode="decimal" placeholder="0"></div>
+        <div><div class="split-lbl">&#127760; W. Union (KWD)</div><input class="fi" id="f-wu" type="number" inputmode="decimal" placeholder="0"></div>
       </div>
       <div style="margin-top:10px;text-align:right">
-        <button onclick="goSingle()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-s);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif">&#8592; Single payment</button>
+        <button onclick="goSingle()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-s);font-family:var(--font)">&#8592; Single payment</button>
       </div>
     </div>
-    <div class="fg" style="margin-top:13px"><label class="fl">Transaction date</label><input class="fi" id="f-date" type="date"></div>
+    <div class="fg" style="margin-top:14px"><label class="fl">Transaction date</label><input class="fi" id="f-date" type="date"></div>
     <div class="fg"><label class="fl">Note (optional)</label><input class="fi" id="f-note" type="text" placeholder="e.g. internet bill"></div>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="closeModal('m-tx')">Cancel</button>
@@ -175,7 +176,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="m-confirm-title">Are you sure?</div>
-    <p id="m-confirm-msg" style="font-size:14px;color:var(--text-s);margin-bottom:24px;line-height:1.7"></p>
+    <p id="m-confirm-msg" style="font-size:14px;color:var(--text-s);margin-bottom:24px;line-height:1.7;font-weight:400"></p>
     <div class="modal-acts">
       <button class="btn-cancel" onclick="closeModal('m-confirm')">Cancel</button>
       <button class="btn-del" id="m-confirm-ok">Delete</button>
@@ -189,7 +190,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 const SB="https://snzeqdlhourgcfhhhdyg.supabase.co";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuemVxZGxob3VyZ2NmaGhoZHlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNjU0MjEsImV4cCI6MjA5NTc0MTQyMX0.0JUhOTFhXGsSSpxPQM00EFXOMnPTUKqwaAVlhMDAIzk";
 const H={"Content-Type":"application/json","apikey":KEY,"Authorization":"Bearer "+KEY};
-
 async function api(method,table,body,qs){
   const url=SB+"/rest/v1/"+table+(qs?"?"+qs:"");
   const res=await fetch(url,{method,headers:{...H,"Prefer":method==="POST"?"return=representation":""},body:body?JSON.stringify(body):undefined});
@@ -197,48 +197,27 @@ async function api(method,table,body,qs){
   if(method==="DELETE"||res.status===204)return[];
   return res.json();
 }
-
-function toggleDark(){
-  const on=document.body.classList.toggle("dark");
-  document.getElementById("dark-toggle").classList.toggle("on",on);
-  localStorage.setItem("dark",on?"1":"0");
-}
-(function(){
-  const s=localStorage.getItem("dark");
-  const p=window.matchMedia("(prefers-color-scheme: dark)").matches;
-  if(s==="1"||(s===null&&p)){document.body.classList.add("dark");document.getElementById("dark-toggle").classList.add("on");}
-})();
-
+function toggleDark(){const on=document.body.classList.toggle("dark");document.getElementById("dark-toggle").classList.toggle("on",on);localStorage.setItem("dark",on?"1":"0");}
+(function(){const s=localStorage.getItem("dark"),p=window.matchMedia("(prefers-color-scheme: dark)").matches;if(s==="1"||(s===null&&p)){document.body.classList.add("dark");document.getElementById("dark-toggle").classList.add("on");}})();
 const COLORS=["c0","c1","c2","c3","c4"];
 const NEEDS_METHOD=["advance","salary","loan_payment"];
-const TXM={
-  advance:     {label:"Advance",       ico:"&#128181;",bg:"var(--blue-l)", cls:"neg", sign:"-"},
-  salary:      {label:"Salary paid",   ico:"&#9989;",  bg:"var(--green-l)",cls:"pos", sign:""},
-  loan:        {label:"Loan added",    ico:"&#128203;",bg:"var(--amber-l)",cls:"warn",sign:"+"},
-  loan_payment:{label:"Loan repayment",ico:"&#128184;",bg:"var(--red-l)",  cls:"neg", sign:"-"},
-  deduction:   {label:"Deduction",     ico:"&#10134;", bg:"var(--red-l)",  cls:"neg", sign:"-"}
-};
-
+const TXM={advance:{label:"Advance",ico:"&#128181;",bg:"var(--blue-l)",cls:"neg",sign:"-"},salary:{label:"Salary paid",ico:"&#9989;",bg:"var(--green-l)",cls:"pos",sign:""},loan:{label:"Loan added",ico:"&#128203;",bg:"var(--amber-l)",cls:"warn",sign:"+"},loan_payment:{label:"Loan repayment",ico:"&#128184;",bg:"var(--red-l)",cls:"neg",sign:"-"},deduction:{label:"Deduction",ico:"&#10134;",bg:"var(--red-l)",cls:"neg",sign:"-"}};
 let emps=[],curEmpId=null,editEmpId=null,curTxType=null,editTxId=null,isSplit=false,txMethod="cash";
 let viewMonth=mk(new Date());
-
 function mk(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
 function today(){return new Date().toISOString().slice(0,10);}
 function fmtM(m){const[y,mo]=m.split("-");return new Date(y,mo-1,1).toLocaleString("default",{month:"long",year:"numeric"});}
-function fmtK(n){return"KWD "+Number(n||0).toFixed(0);}
+function fmtK(n){return"KWD "+Math.round(Number(n||0));}
 function fmtD(d){if(!d)return"";return new Date(d+"T12:00:00").toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});}
 function ini(n){return n.trim().split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);}
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo(0,0);}
 function openModal(id){document.getElementById(id).classList.add("open");}
 function closeModal(id){document.getElementById(id).classList.remove("open");}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
-
 function selMethod(m){txMethod=m;["cash","wu"].forEach(x=>document.getElementById("m-"+x).classList.toggle("sel",x===m));document.getElementById("m-split").classList.remove("sel");}
 function goSplit(){isSplit=true;document.getElementById("tx-single").style.display="none";document.getElementById("tx-split").style.display="block";document.getElementById("f-cash").value="";document.getElementById("f-wu").value="";}
 function goSingle(){isSplit=false;document.getElementById("tx-single").style.display="block";document.getElementById("tx-split").style.display="none";selMethod("cash");}
-
 async function goHome(){show("s-home");await renderHome();}
-
 async function renderHome(){
   document.getElementById("home-sub").textContent=fmtM(viewMonth);
   const body=document.getElementById("home-body");
@@ -255,20 +234,14 @@ async function renderHome(){
         const out=etxs.filter(t=>["advance","deduction","loan_payment","salary"].includes(t.type)).reduce((s,t)=>s+Number(t.amount||0),0);
         const net=Number(emp.salary)-out;
         const cls=net<0?"neg":net===0?"mono":"pos";
-        h+='<div class="emp-card" onclick="openDetail(\''+emp.id+'\')">'
-          +'<div class="avatar '+COLORS[i%5]+'">'+ini(emp.name)+'</div>'
-          +'<div style="flex:1;min-width:0"><div class="emp-name">'+emp.name+'</div><div class="emp-role">'+(emp.role||"Staff")+'</div></div>'
-          +'<div class="emp-right"><div class="emp-net '+cls+'">'+fmtK(net)+'</div><div class="emp-net-lbl">balance due</div></div>'
-          +'</div>';
+        h+='<div class="emp-card" onclick="openDetail(\''+emp.id+'\')"><div class="avatar '+COLORS[i%5]+'">'+ini(emp.name)+'</div><div style="flex:1;min-width:0"><div class="emp-name">'+emp.name+'</div><div class="emp-role">'+(emp.role||"Staff")+'</div></div><div class="emp-right"><div class="emp-net '+cls+'">'+fmtK(net)+'</div><div class="emp-net-lbl">balance due</div></div></div>';
       });
     }
     h+='<button class="add-btn" onclick="openAddEmp()">&#65291; &nbsp;Add employee</button>';
     body.innerHTML=h;
   }catch(e){body.innerHTML='<div class="empty">Connection error.<br><small>'+e.message+'</small></div>';}
 }
-
 function chMonth(d){const[y,m]=viewMonth.split("-").map(Number);viewMonth=mk(new Date(y,m-1+d,1));renderHome();}
-
 async function openDetail(empId){
   curEmpId=empId;show("s-detail");
   const body=document.getElementById("detail-body");
@@ -287,16 +260,8 @@ async function openDetail(empId){
     let loan=Number(emp.initial_loan||0);
     allTx.forEach(t=>{if(t.type==="loan")loan+=Number(t.amount||0);if(t.type==="loan_payment")loan-=Number(t.amount||0);});
     loan=Math.max(0,loan);
-
-    let h='<div class="stats">'
-      +'<div class="stat"><div class="stat-lbl">Monthly salary</div><div class="stat-val n">'+fmtK(emp.salary)+'</div></div>'
-      +'<div class="stat"><div class="stat-lbl">Balance due</div><div class="stat-val '+(net<0?"r":net===0?"n":"g")+'">'+fmtK(net)+'</div></div>'
-      +'<div class="stat"><div class="stat-lbl">Advances this month</div><div class="stat-val '+(adv>0?"r":"n")+'">'+fmtK(adv)+'</div></div>'
-      +'<div class="stat"><div class="stat-lbl">Loan balance</div><div class="stat-val '+(loan>0?"a":"n")+'">'+fmtK(loan)+'</div></div>'
-      +'</div>';
-
-    h+='<div class="payslip"><div class="ps-title">'+fmtM(viewMonth)+'&nbsp;&mdash;&nbsp;Payslip</div>'
-      +'<div class="ps-row"><span class="ps-lbl">Salary</span><span class="pos">'+fmtK(emp.salary)+'</span></div>';
+    let h='<div class="stats"><div class="stat"><div class="stat-lbl">Monthly salary</div><div class="stat-val n">'+fmtK(emp.salary)+'</div></div><div class="stat"><div class="stat-lbl">Balance due</div><div class="stat-val '+(net<0?"r":net===0?"n":"g")+'">'+fmtK(net)+'</div></div><div class="stat"><div class="stat-lbl">Advances this month</div><div class="stat-val '+(adv>0?"r":"n")+'">'+fmtK(adv)+'</div></div><div class="stat"><div class="stat-lbl">Loan balance</div><div class="stat-val '+(loan>0?"a":"n")+'">'+fmtK(loan)+'</div></div></div>';
+    h+='<div class="payslip"><div class="ps-title">'+fmtM(viewMonth)+'&nbsp;&mdash;&nbsp;Payslip</div><div class="ps-row"><span class="ps-lbl">Salary</span><span class="pos">'+fmtK(emp.salary)+'</span></div>';
     if(adv)h+='<div class="ps-row"><span class="ps-lbl">(-) Advances</span><span class="neg">-'+fmtK(adv)+'</span></div>';
     if(ded)h+='<div class="ps-row"><span class="ps-lbl">(-) Deductions</span><span class="neg">-'+fmtK(ded)+'</span></div>';
     if(lrp)h+='<div class="ps-row"><span class="ps-lbl">(-) Loan repayment</span><span class="neg">-'+fmtK(lrp)+'</span></div>';
@@ -304,16 +269,9 @@ async function openDetail(empId){
     h+='<div class="ps-row total"><span class="ps-lbl">Balance due</span><span class="'+(net<0?"neg":net===0?"mono":"pos")+'">'+fmtK(net)+'</span></div>';
     if(loan)h+='<div class="ps-row"><span class="ps-lbl" style="color:var(--text-h)">Loan balance</span><span class="warn">'+fmtK(loan)+'</span></div>';
     h+='</div>';
-
-    h+='<div class="act-grid">'
-      +'<button class="act-btn" onclick="openTx(\'advance\')"><span class="act-ico">&#128181;</span>Give advance</button>'
-      +'<button class="act-btn" onclick="openTx(\'loan\')"><span class="act-ico">&#128203;</span>Add loan</button>'
-      +'<button class="act-btn" onclick="openTx(\'deduction\')"><span class="act-ico">&#10134;</span>Add deduction</button>'
-      +'<button class="act-btn" onclick="openTx(\'loan_payment\')"><span class="act-ico">&#128184;</span>Loan repayment</button>'
-      +'</div>';
+    h+='<div class="act-grid"><button class="act-btn" onclick="openTx(\'advance\')"><span class="act-ico">&#128181;</span>Give advance</button><button class="act-btn" onclick="openTx(\'loan\')"><span class="act-ico">&#128203;</span>Add loan</button><button class="act-btn" onclick="openTx(\'deduction\')"><span class="act-ico">&#10134;</span>Add deduction</button><button class="act-btn" onclick="openTx(\'loan_payment\')"><span class="act-ico">&#128184;</span>Loan repayment</button></div>';
     h+='<button class="pay-btn" onclick="openTx(\'salary\')">&#10003;&nbsp; Pay salary balance &nbsp;('+fmtK(Math.max(0,net))+')</button>';
     h+='<div class="sec-lbl">Transaction history</div>';
-
     if(!allTx.length){h+='<div class="empty" style="padding:24px">No transactions yet</div>';}
     else{
       allTx.forEach(t=>{
@@ -322,29 +280,17 @@ async function openDetail(empId){
         if(t.payment_method==="cash")pill='<span class="pill cash">&#128181; Cash</span>';
         else if(t.payment_method==="wu")pill='<span class="pill wu">&#127760; W.Union</span>';
         else if(t.payment_method==="split"){const w2=Number(t.amount_2||0),c2=Number(t.amount||0)-w2;pill='<span class="pill split">&#9986; '+fmtK(c2)+' + '+fmtK(w2)+' WU</span>';}
-        h+='<div class="tx-card">'
-          +'<div class="tx-ico" style="background:'+tm.bg+'">'+tm.ico+'</div>'
-          +'<div class="tx-info"><div class="tx-type">'+tm.label+(t.note?' &mdash; '+t.note:'')+'</div>'
-          +'<div class="tx-meta">'+fmtD(t.date)+(pill?' &nbsp;'+pill:'')+'</div></div>'
-          +'<div class="tx-right"><div class="tx-amt '+tm.cls+'">'+tm.sign+fmtK(t.amount)+'</div>'
-          +'<div class="tx-month">'+t.month+'</div>'
-          +'<div class="tx-actions">'
-          +'<button class="tx-btn" onclick="event.stopPropagation();openEditTx(\''+t.id+'\')">Edit</button>'
-          +'<button class="tx-btn del" onclick="event.stopPropagation();askDeleteTx(\''+t.id+'\')">Delete</button>'
-          +'</div></div></div>';
+        h+='<div class="tx-card"><div class="tx-ico" style="background:'+tm.bg+'">'+tm.ico+'</div><div class="tx-info"><div class="tx-type">'+tm.label+(t.note?' &mdash; '+t.note:'')+'</div><div class="tx-meta">'+fmtD(t.date)+(pill?' &nbsp;'+pill:'')+'</div></div><div class="tx-right"><div class="tx-amt '+tm.cls+'">'+tm.sign+fmtK(t.amount)+'</div><div class="tx-month">'+t.month+'</div><div class="tx-actions"><button class="tx-btn" onclick="event.stopPropagation();openEditTx(\''+t.id+'\')">Edit</button><button class="tx-btn del" onclick="event.stopPropagation();askDeleteTx(\''+t.id+'\')">Delete</button></div></div></div>';
       });
     }
     body.innerHTML=h;
   }catch(e){body.innerHTML='<div class="empty">Error: '+e.message+'</div>';}
 }
-
 function openAddEmp(){editEmpId=null;document.getElementById("m-emp-title").textContent="Add employee";["f-name","f-role","f-salary","f-loan"].forEach(id=>document.getElementById(id).value="");openModal("m-emp");}
 function openEditEmp(){const emp=emps.find(e=>e.id===curEmpId);editEmpId=emp.id;document.getElementById("m-emp-title").textContent="Edit employee";document.getElementById("f-name").value=emp.name;document.getElementById("f-role").value=emp.role||"";document.getElementById("f-salary").value=emp.salary;document.getElementById("f-loan").value=emp.initial_loan||0;openModal("m-emp");}
 async function saveEmp(){
-  const name=document.getElementById("f-name").value.trim();
-  const role=document.getElementById("f-role").value.trim();
-  const salary=parseFloat(document.getElementById("f-salary").value)||0;
-  const initial_loan=parseFloat(document.getElementById("f-loan").value)||0;
+  const name=document.getElementById("f-name").value.trim(),role=document.getElementById("f-role").value.trim();
+  const salary=parseFloat(document.getElementById("f-salary").value)||0,initial_loan=parseFloat(document.getElementById("f-loan").value)||0;
   if(!name||!salary){toast("Please enter name and salary");return;}
   try{
     if(editEmpId){await api("PATCH","employees",{name,role,salary,initial_loan},"id=eq."+editEmpId);toast("Updated \u2713");}
@@ -356,10 +302,7 @@ function askDeleteEmp(){
   const emp=emps.find(e=>e.id===curEmpId);
   document.getElementById("m-confirm-title").textContent="Delete "+emp.name+"?";
   document.getElementById("m-confirm-msg").textContent="This will permanently delete "+emp.name+" and all their transaction history. This cannot be undone.";
-  document.getElementById("m-confirm-ok").onclick=async()=>{
-    try{await api("DELETE","transactions",null,"employee_id=eq."+curEmpId);await api("DELETE","employees",null,"id=eq."+curEmpId);toast("Deleted");closeModal("m-confirm");await goHome();}
-    catch(e){toast("Error: "+e.message);}
-  };
+  document.getElementById("m-confirm-ok").onclick=async()=>{try{await api("DELETE","transactions",null,"employee_id=eq."+curEmpId);await api("DELETE","employees",null,"id=eq."+curEmpId);toast("Deleted");closeModal("m-confirm");await goHome();}catch(e){toast("Error: "+e.message);}};
   openModal("m-confirm");
 }
 function openTx(type){
@@ -383,14 +326,12 @@ async function openEditTx(txId){
   }catch(e){toast("Error: "+e.message);}
 }
 async function saveTx(){
-  const note=document.getElementById("f-note").value.trim();
-  const date=document.getElementById("f-date").value||today();
-  const[dy,dm]=date.split("-");const month=dy+"-"+dm;
+  const note=document.getElementById("f-note").value.trim(),date=document.getElementById("f-date").value||today();
+  const[dy,dm]=date.split("-"),month=dy+"-"+dm;
   try{
     let payload={note,date,month};
     if(isSplit){
-      const c=parseFloat(document.getElementById("f-cash").value)||0;
-      const w=parseFloat(document.getElementById("f-wu").value)||0;
+      const c=parseFloat(document.getElementById("f-cash").value)||0,w=parseFloat(document.getElementById("f-wu").value)||0;
       if(!c&&!w){toast("Please enter at least one amount");return;}
       payload={...payload,amount:c+w,payment_method:"split",amount_2:w};
     }else{
@@ -406,13 +347,9 @@ async function saveTx(){
 function askDeleteTx(txId){
   document.getElementById("m-confirm-title").textContent="Delete transaction?";
   document.getElementById("m-confirm-msg").textContent="This transaction will be permanently removed. This cannot be undone.";
-  document.getElementById("m-confirm-ok").onclick=async()=>{
-    try{await api("DELETE","transactions",null,"id=eq."+txId);toast("Deleted");closeModal("m-confirm");await openDetail(curEmpId);}
-    catch(e){toast("Error: "+e.message);}
-  };
+  document.getElementById("m-confirm-ok").onclick=async()=>{try{await api("DELETE","transactions",null,"id=eq."+txId);toast("Deleted");closeModal("m-confirm");await openDetail(curEmpId);}catch(e){toast("Error: "+e.message);}};
   openModal("m-confirm");
 }
-
 renderHome();
 </script>
 </body>
