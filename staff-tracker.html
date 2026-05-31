@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" href="icon.png">
 <title>Staff Tracker</title>
 <style>
-:root{--bg:#F8F8F6;--surface:#FFFFFF;--surface2:#F0F0ED;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);--text:#1C1C1A;--text-s:#6E6E69;--text-h:#ADADAA;--accent:#2C2C2A;--accent-l:#EEEEED;--green:#2A5C42;--green-l:#E4F0EA;--red:#8B2020;--red-l:#F5EAEA;--amber:#7A5000;--amber-l:#FDF3E0;--blue:#1E3A5F;--blue-l:#E8F0FA;--r:16px;--rs:12px;--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',sans-serif}
-.dark{--bg:#111110;--surface:#1C1C1A;--surface2:#252523;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0F0ED;--text-s:#8A8A85;--text-h:#4A4A48;--accent:#BBBBB0;--accent-l:#252523;--green:#4CAF80;--green-l:#1A2E24;--red:#E07070;--red-l:#2E1A1A;--amber:#E0A840;--amber-l:#2E2210;--blue:#6B9FD4;--blue-l:#141E2E}
+:root{--bg:#F8F8F6;--surface:#FFFFFF;--surface2:#F0F0ED;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);--text:#1C1C1A;--text-s:#6E6E69;--text-h:#ADADAA;--accent:#2C2C2A;--accent-l:#EEEEED;--pay-btn-bg:#2C2C2A;--green:#2A5C42;--green-l:#E4F0EA;--red:#8B2020;--red-l:#F5EAEA;--amber:#7A5000;--amber-l:#FDF3E0;--blue:#1E3A5F;--blue-l:#E8F0FA;--r:16px;--rs:12px;--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',sans-serif}
+.dark{--bg:#111110;--surface:#1C1C1A;--surface2:#252523;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#F0F0ED;--text-s:#8A8A85;--text-h:#4A4A48;--accent:#BBBBB0;--accent-l:#252523;--pay-btn-bg:#3A3A36;--green:#4CAF80;--green-l:#1A2E24;--red:#E07070;--red-l:#2E1A1A;--amber:#E0A840;--amber-l:#2E2210;--blue:#6B9FD4;--blue-l:#141E2E}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto}
 .screen{display:none;flex-direction:column;min-height:100vh}.screen.active{display:flex}
@@ -53,7 +53,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .act-btn{background:var(--surface);border:0.5px solid var(--border2);border-radius:var(--rs);padding:14px 10px;cursor:pointer;font-size:13px;font-family:var(--font);color:var(--text-s);display:flex;flex-direction:column;align-items:center;gap:7px;font-weight:500}
 .act-btn:active{background:var(--surface2)}
 .act-ico{font-size:22px}
-.pay-btn{background:var(--accent);border:none;border-radius:var(--rs);padding:15px;width:100%;cursor:pointer;font-size:15px;font-family:var(--font);color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-0.3px}
+.pay-btn{background:var(--pay-btn-bg);border:none;border-radius:var(--rs);padding:15px;width:100%;cursor:pointer;font-size:15px;font-family:var(--font);color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-0.3px}
 .pay-btn:active{opacity:0.8}
 .wa-btn{background:var(--green-l);border:none;border-radius:var(--rs);padding:14px;width:100%;cursor:pointer;font-size:14px;font-family:var(--font);color:var(--green);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
 .wa-btn:active{opacity:0.8}
@@ -258,18 +258,32 @@ function fmtShortDate(dateStr) {
 function buildMsg(emp, d, lbl) {
   var m = '\uD83D\uDCCB *' + lbl.title + ' \u2014 ' + d.month + '*\n';
   m += '\uD83D\uDC64 *' + emp.name + '*\n\n';
-  m += '\uD83D\uDCB0 ' + lbl.salary + ': KWD ' + d.sal + '\n';
-  // advances with date and method
+  m += '\uD83D\uDCB0 ' + lbl.salary + ': KWD ' + d.sal + '\n\n';
+  // advances - method + date, split becomes two lines
   d.advances.forEach(function(a) {
-    var ml = a.pm === 'cash' ? lbl.cash : a.pm === 'wu' ? lbl.wu : a.pm === 'split' ? lbl.wu + '+' + lbl.cash : '';
     var dt = a.date ? ' ' + fmtShortDate(a.date) : '';
-    m += '\u27A1\uFE0F ' + lbl.salary + (ml ? ' (' + ml + ')' : '') + dt + ': KWD ' + Math.round(a.amount) + '\n';
+    if (a.pm === 'split') {
+      var cashAmt = Math.round(Number(a.amount) - Number(a.amount2||0));
+      var wuAmt = Math.round(Number(a.amount2||0));
+      if (cashAmt > 0) m += '\u27A1\uFE0F ' + lbl.cash + dt + ': KWD ' + cashAmt + '\n';
+      if (wuAmt > 0)   m += '\u27A1\uFE0F ' + lbl.wu + dt + ': KWD ' + wuAmt + '\n';
+    } else {
+      var ml = a.pm === 'cash' ? lbl.cash : a.pm === 'wu' ? lbl.wu : '';
+      m += '\u27A1\uFE0F ' + (ml || lbl.salary) + dt + ': KWD ' + Math.round(a.amount) + '\n';
+    }
   });
-  // salary payments with date and method
+  // salary payments - method + date, split becomes two lines
   d.salaryPaid.forEach(function(sp) {
-    var ml = sp.pm === 'cash' ? lbl.cash : sp.pm === 'wu' ? lbl.wu : sp.pm === 'split' ? lbl.wu + '+' + lbl.cash : '';
     var dt = sp.date ? ' ' + fmtShortDate(sp.date) : '';
-    m += '\u27A1\uFE0F ' + lbl.salary + (ml ? ' (' + ml + ')' : '') + dt + ': KWD ' + Math.round(sp.amount) + '\n';
+    if (sp.pm === 'split') {
+      var cashAmt = Math.round(Number(sp.amount) - Number(sp.amount2||0));
+      var wuAmt = Math.round(Number(sp.amount2||0));
+      if (cashAmt > 0) m += '\u27A1\uFE0F ' + lbl.cash + dt + ': KWD ' + cashAmt + '\n';
+      if (wuAmt > 0)   m += '\u27A1\uFE0F ' + lbl.wu + dt + ': KWD ' + wuAmt + '\n';
+    } else {
+      var ml = sp.pm === 'cash' ? lbl.cash : sp.pm === 'wu' ? lbl.wu : '';
+      m += '\u27A1\uFE0F ' + (ml || lbl.salary) + dt + ': KWD ' + Math.round(sp.amount) + '\n';
+    }
   });
   // deductions - note only
   d.deductions.forEach(function(dd) {
@@ -597,10 +611,10 @@ async function sendPayslip() {
     loan = Math.max(0, loan);
     var d = {
       sal: Math.round(emp.salary), net: Math.round(net), loan: Math.round(loan), month: fmtMonth(viewMonth),
-      advances:    advances.map(function(t){ return {amount:t.amount, pm:t.payment_method, note:t.note, date:t.date}; }),
+      advances:    advances.map(function(t){ return {amount:t.amount, pm:t.payment_method, note:t.note, date:t.date, amount2:t.amount_2}; }),
       deductions:  deductions.map(function(t){ return {amount:t.amount, note:t.note}; }),
       loanReps:    loanReps.map(function(t){ return {amount:t.amount, pm:t.payment_method}; }),
-      salaryPaid:  salaryPaids.map(function(t){ return {amount:t.amount, pm:t.payment_method, date:t.date}; })
+      salaryPaid:  salaryPaids.map(function(t){ return {amount:t.amount, pm:t.payment_method, date:t.date, amount2:t.amount_2}; })
     };
     var lang = emp.language || "english";
     var lbl = LABELS[lang] || LABELS.english;
