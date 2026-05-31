@@ -249,24 +249,35 @@ const LABELS = {
   amharic: {title:'\u12E8\u12F0\u1218\u12C8\u12DD \u12F0\u1228\u1230\u129D',salary:'\u12E8\u12F0\u1218\u12C8\u12DD',loanRep:'\u12E8\u1265\u12F5\u122D \u1235\u122D\u12DB',salPaid:'\u12E8\u12F0\u1218\u12C8\u12DD \u1265\u12F5\u122D',balance:'\u1240\u122A \u1215\u1233\u1265',loanBal:'\u12E8\u1265\u12F5\u122D \u1240\u122A',cash:'\u1260\u1290\u1240\u12F5',wu:'W.Union'}
 };
 
+function fmtShortDate(dateStr) {
+  if (!dateStr) return '';
+  var d = new Date(dateStr + 'T12:00:00');
+  return d.getDate() + ' ' + d.toLocaleString('default', {month:'short'});
+}
+
 function buildMsg(emp, d, lbl) {
   var m = '\uD83D\uDCCB *' + lbl.title + ' \u2014 ' + d.month + '*\n';
   m += '\uD83D\uDC64 *' + emp.name + '*\n\n';
   m += '\uD83D\uDCB0 ' + lbl.salary + ': KWD ' + d.sal + '\n';
+  // advances with date and method
   d.advances.forEach(function(a) {
-    var ml = a.pm === 'cash' ? lbl.cash : a.pm === 'wu' ? lbl.wu : '';
-    m += '\u27A1\uFE0F ' + (a.note || lbl.salary) + (ml ? ' (' + ml + ')' : '') + ': KWD ' + Math.round(a.amount) + '\n';
+    var ml = a.pm === 'cash' ? lbl.cash : a.pm === 'wu' ? lbl.wu : a.pm === 'split' ? lbl.wu + '+' + lbl.cash : '';
+    var dt = a.date ? ' ' + fmtShortDate(a.date) : '';
+    m += '\u27A1\uFE0F ' + lbl.salary + (ml ? ' (' + ml + ')' : '') + dt + ': KWD ' + Math.round(a.amount) + '\n';
   });
+  // salary payments with date and method
+  d.salaryPaid.forEach(function(sp) {
+    var ml = sp.pm === 'cash' ? lbl.cash : sp.pm === 'wu' ? lbl.wu : sp.pm === 'split' ? lbl.wu + '+' + lbl.cash : '';
+    var dt = sp.date ? ' ' + fmtShortDate(sp.date) : '';
+    m += '\u27A1\uFE0F ' + lbl.salary + (ml ? ' (' + ml + ')' : '') + dt + ': KWD ' + Math.round(sp.amount) + '\n';
+  });
+  // deductions - note only
   d.deductions.forEach(function(dd) {
     m += '\u27A1\uFE0F ' + (dd.note || 'Deduction') + ': KWD ' + Math.round(dd.amount) + '\n';
   });
+  // loan repayments - label only
   d.loanReps.forEach(function(lr) {
-    var ml = lr.pm === 'cash' ? lbl.cash : lr.pm === 'wu' ? lbl.wu : '';
-    m += '\u27A1\uFE0F ' + lbl.loanRep + (ml ? ' (' + ml + ')' : '') + ': KWD ' + Math.round(lr.amount) + '\n';
-  });
-  d.salaryPaid.forEach(function(sp) {
-    var ml = sp.pm === 'cash' ? lbl.cash : sp.pm === 'wu' ? lbl.wu : '';
-    m += '\u2705 ' + lbl.salPaid + (ml ? ' (' + ml + ')' : '') + ': KWD ' + Math.round(sp.amount) + '\n';
+    m += '\u27A1\uFE0F ' + lbl.loanRep + ': KWD ' + Math.round(lr.amount) + '\n';
   });
   m += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
   if (d.net > 0) { m += '\uD83D\uDCB5 *' + lbl.balance + ': KWD ' + d.net + '*\n'; }
@@ -586,10 +597,10 @@ async function sendPayslip() {
     loan = Math.max(0, loan);
     var d = {
       sal: Math.round(emp.salary), net: Math.round(net), loan: Math.round(loan), month: fmtMonth(viewMonth),
-      advances:    advances.map(function(t){ return {amount:t.amount, pm:t.payment_method, note:t.note}; }),
+      advances:    advances.map(function(t){ return {amount:t.amount, pm:t.payment_method, note:t.note, date:t.date}; }),
       deductions:  deductions.map(function(t){ return {amount:t.amount, note:t.note}; }),
       loanReps:    loanReps.map(function(t){ return {amount:t.amount, pm:t.payment_method}; }),
-      salaryPaid:  salaryPaids.map(function(t){ return {amount:t.amount, pm:t.payment_method}; })
+      salaryPaid:  salaryPaids.map(function(t){ return {amount:t.amount, pm:t.payment_method, date:t.date}; })
     };
     var lang = emp.language || "english";
     var lbl = LABELS[lang] || LABELS.english;
