@@ -632,7 +632,7 @@ function showPayslip() {
 
     // Advances
     advances.forEach(function(a) {
-      var dt = a.date ? " \u2014 " + fmtShortDate(a.date, lang) : "";
+      var dt = a.date ? " \u2014 " + fmtShortDate(a.date, 'english') : "";
       if (a.payment_method === "split") {
         var w2 = Number(a.amount_2||0), c2 = Number(a.amount||0)-w2;
         if (c2 > 0) rows += buildReceiptRow(lbl.cash + dt, "", "- " + fmtK(c2), "neg");
@@ -645,7 +645,7 @@ function showPayslip() {
 
     // Salary payments
     salaryPaids.forEach(function(sp) {
-      var dt = sp.date ? " \u2014 " + fmtShortDate(sp.date, lang) : "";
+      var dt = sp.date ? " \u2014 " + fmtShortDate(sp.date, 'english') : "";
       if (sp.payment_method === "split") {
         var w2 = Number(sp.amount_2||0), c2 = Number(sp.amount||0)-w2;
         if (c2 > 0) rows += buildReceiptRow(lbl.cash + dt, "", "- " + fmtK(c2), "neg");
@@ -702,16 +702,16 @@ function generateReceiptHTML(name, month, rows, balanceRow, lbl, loan, lang) {
     + '.stamp{display:inline-block;border:2.5px solid #8B6A30;border-radius:8px;padding:7px 16px;margin-bottom:14px;}'
     + '.stamp-en{font-size:12px;font-weight:700;color:#8B6A30;text-transform:uppercase;letter-spacing:2px;}'
     + '.stamp-native{font-size:10px;color:#B09060;font-style:italic;margin-top:3px;}'
-    + '.name{font-size:18px;font-weight:700;color:#2C1F0A;letter-spacing:-0.3px;}'
+    + '.name{font-size:22px;font-weight:700;color:#2C1F0A;letter-spacing:-0.5px;}'
     + '.meta{font-size:11px;color:#9A7A40;margin-top:4px;}'
     + '.divider{height:1px;background:repeating-linear-gradient(90deg,#C8A870 0,#C8A870 6px,transparent 6px,transparent 12px);margin:10px 24px;}'
     + '.rows{padding:4px 24px 8px;}'
-    + '.row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid #D8C898;}'
+    + '.row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:0.5px solid #D8C898;}'
     + '.row:last-child{border-bottom:none;}'
     + '.row-left{flex:1;}'
-    + '.row-en{font-size:13px;font-weight:500;color:#2C1F0A;}'
-    + '.row-native{font-size:10px;color:#A08040;font-style:italic;margin-top:2px;}'
-    + '.row-amt{font-size:13px;font-weight:600;white-space:nowrap;padding-left:12px;color:#2C1F0A;}'
+    + '.row-en{font-size:15px;font-weight:600;color:#2C1F0A;line-height:1.3;}'
+    + '.row-native{font-size:13px;color:#A08040;font-style:italic;margin-top:5px;display:block;line-height:1.3;}'
+    + '.row-amt{font-size:15px;font-weight:700;white-space:nowrap;padding-left:12px;color:#2C1F0A;}'
     + '.row-amt.neg{color:#7A2010;}'
     + '.row-amt.pos{color:#1A5020;}'
     + '.footer{text-align:center;padding:10px 24px 22px;}'
