@@ -240,11 +240,11 @@ const TXM = {
 };
 
 const LABELS = {
-  english: {title:'Salary Payslip',salary:'Salary',loanRep:'Loan repayment',salPaid:'Salary paid',balance:'Balance due',loanBal:'Loan balance',cash:'Cash',wu:'W.Union'},
-  sinhala: {title:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4\u0DCA \u0DB4\u0DAD\u0DCA\u200D\u0DBB\u0DD2\u0D9A\u0DCF\u0DC0',salary:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',loanRep:'\u0DAB\u0DBA \u0D9C\u0DD9\u0DC0\u0DD3\u0DB8',salPaid:'\u0D9C\u0DD9\u0DC5\u0DD6 \u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',balance:'\u0DC1\u0DDA\u0DC2\u0DBA',loanBal:'\u0DAB\u0DBA \u0DC1\u0DDA\u0DC2\u0DBA',cash:'\u0DB1\u0DC4',wu:'W.Union'},
-  hindi: {title:'\u0935\u0947\u0924\u0928 \u092A\u0930\u094D\u091A\u0940',salary:'\u0935\u0947\u0924\u0928',loanRep:'\u0939\u093F\u0938\u094D\u0938\u093E',salPaid:'\u0935\u0947\u0924\u0928 \u092D\u0941\u0917\u0924\u093E\u0928',balance:'\u0936\u0947\u0937',loanBal:'\u0939\u0932\u094D\u0915',cash:'\u0928\u0915\u0926',wu:'W.Union'},
-  bengali: {title:'\u09AC\u09C7\u09A4\u09A8 \u09B8\u09CD\u09B2\u09BF\u09AA',salary:'\u09AC\u09C7\u09A4\u09A8',loanRep:'\u0995\u09BF\u09B8\u09CD\u09A4\u09BF',salPaid:'\u09AC\u09C7\u09A4\u09A8 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7',balance:'\u09AC\u09BE\u0995\u09BF',loanBal:'\u0993\u09A3',cash:'\u09A8\u0997\u09A6',wu:'W.Union'},
-  amharic: {title:'\u12E8\u12F0\u1218\u12C8\u12DD \u12F0\u1228\u1230\u129D',salary:'\u12E8\u12F0\u1218\u12C8\u12DD',loanRep:'\u12E8\u1265\u12F5\u122D \u1235\u122D\u12DB',salPaid:'\u12E8\u12F0\u1218\u12C8\u12DD \u1265\u12F5\u122D',balance:'\u1240\u122A \u1215\u1233\u1265',loanBal:'\u12E8\u1265\u12F5\u122D \u1240\u122A',cash:'\u1260\u1290\u1240\u12F5',wu:'W.Union'}
+  english: {title:'Salary Payslip',titleNative:'',salary:'Salary',loanRep:'Loan repayment',salPaid:'Salary paid',balance:'Balance due',loanBal:'Loan balance',loanBalNative:'',cash:'Cash',wu:'W.Union'},
+  sinhala: {title:'Salary Payslip',titleNative:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4\u0DCA \u0DB4\u0DAD\u0DCA\u200D\u0DBB\u0DD2\u0D9A\u0DCF\u0DC0',salary:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',loanRep:'\u0DAB\u0DBA \u0D9C\u0DD9\u0DC0\u0DD3\u0DB8',salPaid:'\u0D9C\u0DD9\u0DC5\u0DD6 \u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',balance:'\u0DC1\u0DDA\u0DC2\u0DBA',loanBal:'Loan balance',loanBalNative:'\u0DAB\u0DBA \u0DC1\u0DDA\u0DC2\u0DBA',cash:'\u0DB1\u0DC4',wu:'W.Union'},
+  hindi: {title:'Salary Payslip',titleNative:'\u0935\u0947\u0924\u0928 \u092A\u0930\u094D\u091A\u0940',salary:'\u0935\u0947\u0924\u0928',loanRep:'\u0939\u093F\u0938\u094D\u0938\u093E',salPaid:'\u0935\u0947\u0924\u0928 \u092D\u0941\u0917\u0924\u093E\u0928',balance:'\u0936\u0947\u0937',loanBal:'Loan balance',loanBalNative:'\u0939\u0932\u094D\u0915',cash:'\u0928\u0915\u0926',wu:'W.Union'},
+  bengali: {title:'Salary Payslip',titleNative:'\u09AC\u09C7\u09A4\u09A8 \u09B8\u09CD\u09B2\u09BF\u09AA',salary:'\u09AC\u09C7\u09A4\u09A8',loanRep:'\u0995\u09BF\u09B8\u09CD\u09A4\u09BF',salPaid:'\u09AC\u09C7\u09A4\u09A8 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7',balance:'\u09AC\u09BE\u0995\u09BF',loanBal:'Loan balance',loanBalNative:'\u0993\u09A3',cash:'\u09A8\u0997\u09A6',wu:'W.Union'},
+  amharic: {title:'Salary Payslip',titleNative:'\u12E8\u12F0\u1218\u12C8\u12DD \u12F0\u1228\u1230\u129D',salary:'\u12E8\u12F0\u1218\u12C8\u12DD',loanRep:'\u12E8\u1265\u12F5\u122D \u1235\u122D\u12DB',salPaid:'\u12E8\u12F0\u1218\u12C8\u12DD \u1265\u12F5\u122D',balance:'\u1240\u122A \u1215\u1233\u1265',loanBal:'Loan balance',loanBalNative:'\u12E8\u1265\u12F5\u122D \u1240\u122A',cash:'\u1260\u1290\u1240\u12F5',wu:'W.Union'}
 };
 
 var MONTHS = {
@@ -426,7 +426,7 @@ async function openDetail(empId) {
       + '<button class="act-btn" onclick="openTx(\'loan_payment\')"><span class="act-ico">&#128184;</span>Loan repayment</button>'
       + '</div>';
     h += '<button class="pay-btn" onclick="openTx(\'salary\')">&#10003;&nbsp; Pay salary balance &nbsp;('+fmtK(Math.max(0,net))+')</button>';
-    h += '<button class="wa-btn" onclick="sendPayslip()">&#128172;&nbsp; Send payslip via WhatsApp</button>';
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';h += '<button class="wa-btn" onclick="sendPayslip()">&#128172;&nbsp; Send via WhatsApp</button>';h += '<button class="wa-btn" style="background:var(--amber-l);color:var(--amber);" onclick="showPayslip()">&#128203;&nbsp; View receipt</button>';h += '</div>';
     h += '<div class="sec-lbl">Transaction history</div>';
 
     if (!allTx.length) {
@@ -593,6 +593,147 @@ function askDeleteTx(txId) {
     } catch(e) { toast("Error: "+e.message); }
   };
   openModal("m-confirm");
+}
+
+function showPayslip() {
+  var emp = emps.find(function(e){ return e.id === curEmpId; });
+  if (!emp.phone) { toast("Please add a phone number first"); openEditEmp(); return; }
+
+  // Get current month transactions
+  var allTxPromise = api("GET", "transactions", null, "employee_id=eq."+curEmpId+"&order=date.desc,created_at.desc");
+  allTxPromise.then(function(allTx) {
+    var mTx = allTx.filter(function(t){ return t.month === viewMonth; });
+    var advances    = mTx.filter(function(t){ return t.type==="advance"; });
+    var deductions  = mTx.filter(function(t){ return t.type==="deduction"; });
+    var loanReps    = mTx.filter(function(t){ return t.type==="loan_payment"; });
+    var salaryPaids = mTx.filter(function(t){ return t.type==="salary"; });
+    var totalAdv = advances.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
+    var totalDed = deductions.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
+    var totalLrp = loanReps.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
+    var totalSal = salaryPaids.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
+    var net = Number(emp.salary) - totalAdv - totalDed - totalLrp - totalSal;
+    var loan = Number(emp.initial_loan||0);
+    allTx.forEach(function(t){
+      if (t.type==="loan") loan += Number(t.amount||0);
+      if (t.type==="loan_payment") loan -= Number(t.amount||0);
+    });
+    loan = Math.max(0, loan);
+
+    var lang = emp.language || "english";
+    var lbl = LABELS[lang] || LABELS.english;
+
+    // Build rows HTML
+    var rows = "";
+
+    // Salary row
+    rows += buildReceiptRow(lbl.salary, "", fmtK(emp.salary), "pos");
+
+    // Advances
+    advances.forEach(function(a) {
+      var dt = a.date ? " \u2014 " + fmtShortDate(a.date, lang) : "";
+      if (a.payment_method === "split") {
+        var w2 = Number(a.amount_2||0), c2 = Number(a.amount||0)-w2;
+        if (c2 > 0) rows += buildReceiptRow(lbl.cash + dt, "", "- " + fmtK(c2), "neg");
+        if (w2 > 0) rows += buildReceiptRow(lbl.wu + dt, "", "- " + fmtK(w2), "neg");
+      } else {
+        var ml = a.payment_method === "cash" ? lbl.cash : a.payment_method === "wu" ? lbl.wu : lbl.salary;
+        rows += buildReceiptRow(ml + dt, "", "- " + fmtK(a.amount), "neg");
+      }
+    });
+
+    // Salary payments
+    salaryPaids.forEach(function(sp) {
+      var dt = sp.date ? " \u2014 " + fmtShortDate(sp.date, lang) : "";
+      if (sp.payment_method === "split") {
+        var w2 = Number(sp.amount_2||0), c2 = Number(sp.amount||0)-w2;
+        if (c2 > 0) rows += buildReceiptRow(lbl.cash + dt, "", "- " + fmtK(c2), "neg");
+        if (w2 > 0) rows += buildReceiptRow(lbl.wu + dt, "", "- " + fmtK(w2), "neg");
+      } else {
+        var ml = sp.payment_method === "cash" ? lbl.cash : sp.payment_method === "wu" ? lbl.wu : lbl.salary;
+        rows += buildReceiptRow(ml + dt, "", "- " + fmtK(sp.amount), "neg");
+      }
+    });
+
+    // Deductions
+    deductions.forEach(function(dd) {
+      rows += buildReceiptRow(dd.note || "Deduction", "", "- " + fmtK(dd.amount), "neg");
+    });
+
+    // Loan repayments
+    loanReps.forEach(function(lr) {
+      rows += buildReceiptRow(lbl.loanRep, "", "- " + fmtK(lr.amount), "neg");
+    });
+
+    // Balance due row (if any)
+    var balanceRow = "";
+    if (net > 0) {
+      balanceRow = buildReceiptRow(lbl.balance, "", fmtK(net), "pos");
+    }
+
+    var monthStr = fmtMonth(viewMonth);
+    var receiptHtml = generateReceiptHTML(emp.name, monthStr, rows, balanceRow, lbl, Math.round(loan), lang);
+    var win = window.open("", "_blank");
+    win.document.write(receiptHtml);
+    win.document.close();
+  }).catch(function(e) { toast("Error: " + e.message); });
+}
+
+function buildReceiptRow(en, native, amount, cls) {
+  return '<div class="row">'
+    + '<div class="row-left"><div class="row-en">' + en + '</div>'
+    + (native ? '<div class="row-native">' + native + '</div>' : '')
+    + '</div>'
+    + '<div class="row-amt ' + cls + '">' + amount + '</div>'
+    + '</div>';
+}
+
+function generateReceiptHTML(name, month, rows, balanceRow, lbl, loan, lang) {
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    + '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+    + '<style>'
+    + 'body{margin:0;padding:32px 16px;background:#1a1a18;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;}'
+    + '.receipt{width:300px;position:relative;}'
+    + '.zz-top{height:12px;background:linear-gradient(-45deg,#EDE0C4 6px,transparent 0),linear-gradient(45deg,#EDE0C4 6px,transparent 0);background-size:12px 12px;background-color:#1a1a18;}'
+    + '.zz-bot{height:12px;background:linear-gradient(-45deg,#1a1a18 6px,transparent 0),linear-gradient(45deg,#1a1a18 6px,transparent 0);background-size:12px 12px;background-color:#EDE0C4;}'
+    + '.body{background:#EDE0C4;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;}'
+    + '.hdr{text-align:center;padding:20px 24px 14px;}'
+    + '.stamp{display:inline-block;border:2.5px solid #8B6A30;border-radius:8px;padding:7px 16px;margin-bottom:14px;}'
+    + '.stamp-en{font-size:12px;font-weight:700;color:#8B6A30;text-transform:uppercase;letter-spacing:2px;}'
+    + '.stamp-native{font-size:10px;color:#B09060;font-style:italic;margin-top:3px;}'
+    + '.name{font-size:18px;font-weight:700;color:#2C1F0A;letter-spacing:-0.3px;}'
+    + '.meta{font-size:11px;color:#9A7A40;margin-top:4px;}'
+    + '.divider{height:1px;background:repeating-linear-gradient(90deg,#C8A870 0,#C8A870 6px,transparent 6px,transparent 12px);margin:10px 24px;}'
+    + '.rows{padding:4px 24px 8px;}'
+    + '.row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid #D8C898;}'
+    + '.row:last-child{border-bottom:none;}'
+    + '.row-left{flex:1;}'
+    + '.row-en{font-size:13px;font-weight:500;color:#2C1F0A;}'
+    + '.row-native{font-size:10px;color:#A08040;font-style:italic;margin-top:2px;}'
+    + '.row-amt{font-size:13px;font-weight:600;white-space:nowrap;padding-left:12px;color:#2C1F0A;}'
+    + '.row-amt.neg{color:#7A2010;}'
+    + '.row-amt.pos{color:#1A5020;}'
+    + '.footer{text-align:center;padding:10px 24px 22px;}'
+    + '.bal-en{font-size:11px;font-weight:700;color:#2C1F0A;text-transform:uppercase;letter-spacing:1px;}'
+    + '.bal-native{font-size:10px;color:#A08040;font-style:italic;margin-top:3px;}'
+    + '.bal-amt{font-size:28px;font-weight:700;color:#1A5020;margin-top:8px;letter-spacing:-1px;}'
+    + '.hint{margin-top:20px;font-size:11px;color:#666;font-family:-apple-system,sans-serif;text-align:center;line-height:1.6;}'
+    + '</style></head><body>'
+    + '<div class="receipt">'
+    + '<div class="zz-top"></div>'
+    + '<div class="body">'
+    + '<div class="hdr">'
+    + '<div class="stamp"><div class="stamp-en">' + lbl.title + '</div><div class="stamp-native">' + (lbl.titleNative||'') + '</div></div>'
+    + '<div class="name">' + name + '</div>'
+    + '<div class="meta">' + month + '</div>'
+    + '</div>'
+    + '<div class="divider"></div>'
+    + '<div class="rows">' + rows + (balanceRow||'') + '</div>'
+    + (loan > 0 ? '<div class="divider"></div><div class="footer"><div class="bal-en">' + lbl.loanBal + '</div><div class="bal-native">' + (lbl.loanBalNative||'') + '</div><div class="bal-amt">KWD ' + loan + '</div></div>' : '')
+    + '</div>'
+    + '<div class="zz-bot"></div>'
+    + '</div>'
+    + '<div class="hint">Long press the receipt &rarr; Save Image<br>Then send in WhatsApp</div>'
+    + '</body></html>';
 }
 
 async function sendPayslip() {
