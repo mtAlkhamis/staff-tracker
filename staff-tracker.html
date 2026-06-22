@@ -140,6 +140,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <option value="hindi">Hindi</option>
         <option value="bengali">Bengali</option>
         <option value="amharic">Amharic (Ethiopian)</option>
+        <option value="tagalog">Tagalog (Filipino)</option>
       </select>
     </div>
     <div class="modal-acts">
@@ -241,10 +242,11 @@ const TXM = {
 
 const LABELS = {
   english: {title:'Salary Payslip',titleNative:'',salary:'Salary',loanRep:'Loan repayment',salPaid:'Salary paid',balance:'Balance due',loanBal:'Loan balance',loanBalNative:'',cash:'Cash',wu:'W.Union'},
-  sinhala: {title:'Salary Payslip',titleNative:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4\u0DCA \u0DB4\u0DAD\u0DCA\u200D\u0DBB\u0DD2\u0D9A\u0DCF\u0DC0',salary:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',loanRep:'\u0DAB\u0DBA \u0D9C\u0DD9\u0DC0\u0DD3\u0DB8',salPaid:'\u0D9C\u0DD9\u0DC5\u0DD6 \u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',balance:'\u0DC1\u0DDA\u0DC2\u0DBA',loanBal:'Loan balance',loanBalNative:'\u0DAB\u0DBA \u0DC1\u0DDA\u0DC2\u0DBA',cash:'\u0DB1\u0DC4',wu:'W.Union'},
-  hindi: {title:'Salary Payslip',titleNative:'\u0935\u0947\u0924\u0928 \u092A\u0930\u094D\u091A\u0940',salary:'\u0935\u0947\u0924\u0928',loanRep:'\u0939\u093F\u0938\u094D\u0938\u093E',salPaid:'\u0935\u0947\u0924\u0928 \u092D\u0941\u0917\u0924\u093E\u0928',balance:'\u0936\u0947\u0937',loanBal:'Loan balance',loanBalNative:'\u0939\u0932\u094D\u0915',cash:'\u0928\u0915\u0926',wu:'W.Union'},
-  bengali: {title:'Salary Payslip',titleNative:'\u09AC\u09C7\u09A4\u09A8 \u09B8\u09CD\u09B2\u09BF\u09AA',salary:'\u09AC\u09C7\u09A4\u09A8',loanRep:'\u0995\u09BF\u09B8\u09CD\u09A4\u09BF',salPaid:'\u09AC\u09C7\u09A4\u09A8 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7',balance:'\u09AC\u09BE\u0995\u09BF',loanBal:'Loan balance',loanBalNative:'\u0993\u09A3',cash:'\u09A8\u0997\u09A6',wu:'W.Union'},
-  amharic: {title:'Salary Payslip',titleNative:'\u12E8\u12F0\u1218\u12C8\u12DD \u12F0\u1228\u1230\u129D',salary:'\u12E8\u12F0\u1218\u12C8\u12DD',loanRep:'\u12E8\u1265\u12F5\u122D \u1235\u122D\u12DB',salPaid:'\u12E8\u12F0\u1218\u12C8\u12DD \u1265\u12F5\u122D',balance:'\u1240\u122A \u1215\u1233\u1265',loanBal:'Loan balance',loanBalNative:'\u12E8\u1265\u12F5\u122D \u1240\u122A',cash:'\u1260\u1290\u1240\u12F5',wu:'W.Union'}
+  sinhala: {title:'Salary Payslip',titleNative:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4\u0DCA \u0DB4\u0DAD\u0DCA\u200D\u0DBB\u0DD2\u0D9A\u0DCF\u0DC0',salary:'Salary',salaryNative:'\u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',loanRep:'Loan repayment',loanRepNative:'\u0DAB\u0DBA \u0D9C\u0DD9\u0DC0\u0DD3\u0DB8',salPaid:'Salary paid',salPaidNative:'\u0D9C\u0DD9\u0DC5\u0DD6 \u0DC0\u0DD0\u0DA7\u0DD4\u0DB4',balance:'Balance due',balanceNative:'\u0DC1\u0DDA\u0DC2\u0DBA',loanBal:'Loan balance',loanBalNative:'\u0DAB\u0DBA \u0DC1\u0DDA\u0DC2\u0DBA',cash:'Cash',cashNative:'\u0DB1\u0DC4',wu:'W.Union',wuNative:'W.Union'},
+  hindi: {title:'Salary Payslip',titleNative:'\u0935\u0947\u0924\u0928 \u092A\u0930\u094D\u091A\u0940',salary:'Salary',salaryNative:'\u0935\u0947\u0924\u0928',loanRep:'Loan repayment',loanRepNative:'\u0939\u093F\u0938\u094D\u0938\u093E',salPaid:'Salary paid',salPaidNative:'\u0935\u0947\u0924\u0928 \u092D\u0941\u0917\u0924\u093E\u0928',balance:'Balance due',balanceNative:'\u0936\u0947\u0937',loanBal:'Loan balance',loanBalNative:'\u0939\u0932\u094D\u0915',cash:'Cash',cashNative:'\u0928\u0915\u0926',wu:'W.Union',wuNative:'W.Union'},
+  bengali: {title:'Salary Payslip',titleNative:'\u09AC\u09C7\u09A4\u09A8 \u09B8\u09CD\u09B2\u09BF\u09AA',salary:'Salary',salaryNative:'\u09AC\u09C7\u09A4\u09A8',loanRep:'Loan repayment',loanRepNative:'\u0995\u09BF\u09B8\u09CD\u09A4\u09BF',salPaid:'Salary paid',salPaidNative:'\u09AC\u09C7\u09A4\u09A8 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7',balance:'Balance due',balanceNative:'\u09AC\u09BE\u0995\u09BF',loanBal:'Loan balance',loanBalNative:'\u0993\u09A3',cash:'Cash',cashNative:'\u09A8\u0997\u09A6',wu:'W.Union',wuNative:'W.Union'},
+  amharic: {title:'Salary Payslip',titleNative:'\u12E8\u12F0\u1218\u12C8\u12DD \u12F0\u1228\u1230\u129D',salary:'Salary',salaryNative:'\u12E8\u12F0\u1218\u12C8\u12DD',loanRep:'Loan repayment',loanRepNative:'\u12E8\u1265\u12F5\u122D \u1235\u122D\u12DB',salPaid:'Salary paid',salPaidNative:'\u12E8\u12F0\u1218\u12C8\u12DD \u1265\u12F5\u122D',balance:'Balance due',balanceNative:'\u1240\u122A \u1215\u1233\u1265',loanBal:'Loan balance',loanBalNative:'\u12E8\u1265\u12F5\u122D \u1240\u122A',cash:'Cash',cashNative:'\u1260\u1290\u1240\u12F5',wu:'W.Union',wuNative:'W.Union'},
+  tagalog: {title:'Salary Payslip',titleNative:'Payslip ng Sahod',salary:'Salary',salaryNative:'Sahod',loanRep:'Loan repayment',loanRepNative:'Bayad sa utang',salPaid:'Salary paid',salPaidNative:'Sahod na binayad',balance:'Balance due',balanceNative:'Natitirang bayad',loanBal:'Loan balance',loanBalNative:'Balanse ng utang',cash:'Cash',cashNative:'Cash',wu:'W.Union',wuNative:'W.Union'}
 };
 
 var MONTHS = {
@@ -626,7 +628,7 @@ function showPayslip() {
     var rows = "";
 
     // Salary row
-    rows += buildReceiptRow(lbl.salary, "", fmtK(emp.salary), "pos");
+    rows += buildReceiptRow('Salary', lbl.salaryNative||'', fmtK(emp.salary), "pos");
 
     // Advances
     advances.forEach(function(a) {
@@ -656,18 +658,18 @@ function showPayslip() {
 
     // Deductions
     deductions.forEach(function(dd) {
-      rows += buildReceiptRow(dd.note || "Deduction", "", "- " + fmtK(dd.amount), "neg");
+      rows += buildReceiptRow('Deduction', dd.note || '', '- ' + fmtK(dd.amount), 'neg');
     });
 
     // Loan repayments
     loanReps.forEach(function(lr) {
-      rows += buildReceiptRow(lbl.loanRep, "", "- " + fmtK(lr.amount), "neg");
+      rows += buildReceiptRow('Loan repayment', lbl.loanRepNative||'', '- ' + fmtK(lr.amount), 'neg');
     });
 
     // Balance due row (if any)
     var balanceRow = "";
     if (net > 0) {
-      balanceRow = buildReceiptRow(lbl.balance, "", fmtK(net), "pos");
+      balanceRow = buildReceiptRow('Balance due', lbl.balanceNative||'', fmtK(net), 'pos');
     }
 
     var monthStr = fmtMonth(viewMonth);
