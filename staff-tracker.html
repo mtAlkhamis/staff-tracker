@@ -303,7 +303,7 @@ function buildMsg(emp, d, lbl, lang) {
     m += '\u27A1\uFE0F ' + lbl.loanRep + ': KWD ' + Math.round(lr.amount) + '\n';
   });
   m += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
-  if (d.net > 0) { m += '\uD83D\uDCB5 *' + lbl.balance + ': KWD ' + d.net + '*\n'; }
+  m += '\uD83D\uDCB5 *' + lbl.balance + ': KWD ' + d.net + '*\n';
   if (d.loan > 0) { m += '\uD83D\uDCCC ' + lbl.loanBal + ': KWD ' + d.loan; }
   return m;
 }
@@ -632,27 +632,27 @@ function showPayslip() {
 
     // Advances
     advances.forEach(function(a) {
-      var dt = a.date ? " \u2014 " + fmtShortDate(a.date, 'english') : "";
+      var dtStr = a.date ? fmtShortDate(a.date, 'english') : "";
       if (a.payment_method === "split") {
         var w2 = Number(a.amount_2||0), c2 = Number(a.amount||0)-w2;
-        if (c2 > 0) rows += buildReceiptRow(lbl.cash + dt, "", "- " + fmtK(c2), "neg");
-        if (w2 > 0) rows += buildReceiptRow(lbl.wu + dt, "", "- " + fmtK(w2), "neg");
+        if (c2 > 0) rows += buildReceiptRow("Cash", dtStr, "- " + fmtK(c2), "neg");
+        if (w2 > 0) rows += buildReceiptRow("W.Union", dtStr, "- " + fmtK(w2), "neg");
       } else {
-        var ml = a.payment_method === "cash" ? lbl.cash : a.payment_method === "wu" ? lbl.wu : lbl.salary;
-        rows += buildReceiptRow(ml + dt, "", "- " + fmtK(a.amount), "neg");
+        var enLabel = a.payment_method === "cash" ? "Cash" : a.payment_method === "wu" ? "W.Union" : "Salary";
+        rows += buildReceiptRow(enLabel, dtStr, "- " + fmtK(a.amount), "neg");
       }
     });
 
     // Salary payments
     salaryPaids.forEach(function(sp) {
-      var dt = sp.date ? " \u2014 " + fmtShortDate(sp.date, 'english') : "";
+      var dtStr = sp.date ? fmtShortDate(sp.date, 'english') : "";
       if (sp.payment_method === "split") {
         var w2 = Number(sp.amount_2||0), c2 = Number(sp.amount||0)-w2;
-        if (c2 > 0) rows += buildReceiptRow(lbl.cash + dt, "", "- " + fmtK(c2), "neg");
-        if (w2 > 0) rows += buildReceiptRow(lbl.wu + dt, "", "- " + fmtK(w2), "neg");
+        if (c2 > 0) rows += buildReceiptRow("Cash", dtStr, "- " + fmtK(c2), "neg");
+        if (w2 > 0) rows += buildReceiptRow("W.Union", dtStr, "- " + fmtK(w2), "neg");
       } else {
-        var ml = sp.payment_method === "cash" ? lbl.cash : sp.payment_method === "wu" ? lbl.wu : lbl.salary;
-        rows += buildReceiptRow(ml + dt, "", "- " + fmtK(sp.amount), "neg");
+        var enLabel = sp.payment_method === "cash" ? "Cash" : sp.payment_method === "wu" ? "W.Union" : "Salary";
+        rows += buildReceiptRow(enLabel, dtStr, "- " + fmtK(sp.amount), "neg");
       }
     });
 
@@ -667,10 +667,7 @@ function showPayslip() {
     });
 
     // Balance due row (if any)
-    var balanceRow = "";
-    if (net > 0) {
-      balanceRow = buildReceiptRow('Balance due', lbl.balanceNative||'', fmtK(net), 'pos');
-    }
+    var balanceRow = buildReceiptRow('Balance due', lbl.balanceNative||'', fmtK(net), net > 0 ? 'pos' : 'neg');
 
     var monthStr = fmtMonth(viewMonth);
     var receiptHtml = generateReceiptHTML(emp.name, monthStr, rows, balanceRow, lbl, Math.round(loan), lang);
@@ -680,10 +677,10 @@ function showPayslip() {
   }).catch(function(e) { toast("Error: " + e.message); });
 }
 
-function buildReceiptRow(en, native, amount, cls) {
+function buildReceiptRow(en, subtitle, amount, cls) {
   return '<div class="row">'
     + '<div class="row-left"><div class="row-en">' + en + '</div>'
-    + (native ? '<div class="row-native">' + native + '</div>' : '')
+    + (subtitle ? '<div class="row-native">' + subtitle + '</div>' : '')
     + '</div>'
     + '<div class="row-amt ' + cls + '">' + amount + '</div>'
     + '</div>';
