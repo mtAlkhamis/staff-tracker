@@ -687,52 +687,75 @@ function buildReceiptRow(en, subtitle, amount, cls) {
 }
 
 function generateReceiptHTML(name, month, rows, balanceRow, lbl, loan, lang) {
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    + '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
-    + '<style>'
-    + 'body{margin:0;padding:32px 16px;background:#1a1a18;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;}'
-    + '.receipt{width:300px;position:relative;}'
-    + '.zz-top{height:12px;background:linear-gradient(-45deg,#EDE0C4 6px,transparent 0),linear-gradient(45deg,#EDE0C4 6px,transparent 0);background-size:12px 12px;background-color:#1a1a18;}'
-    + '.zz-bot{height:12px;background:linear-gradient(-45deg,#1a1a18 6px,transparent 0),linear-gradient(45deg,#1a1a18 6px,transparent 0);background-size:12px 12px;background-color:#EDE0C4;}'
-    + '.body{background:#EDE0C4;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;}'
-    + '.hdr{text-align:center;padding:20px 24px 14px;}'
-    + '.stamp{display:inline-block;border:2.5px solid #8B6A30;border-radius:8px;padding:7px 16px;margin-bottom:14px;}'
-    + '.stamp-en{font-size:12px;font-weight:700;color:#8B6A30;text-transform:uppercase;letter-spacing:2px;}'
-    + '.stamp-native{font-size:10px;color:#B09060;font-style:italic;margin-top:3px;}'
-    + '.name{font-size:22px;font-weight:700;color:#2C1F0A;letter-spacing:-0.5px;}'
-    + '.meta{font-size:11px;color:#9A7A40;margin-top:4px;}'
-    + '.divider{height:1px;background:repeating-linear-gradient(90deg,#C8A870 0,#C8A870 6px,transparent 6px,transparent 12px);margin:10px 24px;}'
-    + '.rows{padding:4px 24px 8px;}'
-    + '.row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:0.5px solid #D8C898;}'
-    + '.row:last-child{border-bottom:none;}'
-    + '.row-left{flex:1;}'
-    + '.row-en{font-size:15px;font-weight:600;color:#2C1F0A;line-height:1.3;}'
-    + '.row-native{font-size:13px;color:#A08040;font-style:italic;margin-top:5px;display:block;line-height:1.3;}'
-    + '.row-amt{font-size:15px;font-weight:700;white-space:nowrap;padding-left:12px;color:#2C1F0A;}'
-    + '.row-amt.neg{color:#7A2010;}'
-    + '.row-amt.pos{color:#1A5020;}'
-    + '.footer{text-align:center;padding:10px 24px 22px;}'
-    + '.bal-en{font-size:11px;font-weight:700;color:#2C1F0A;text-transform:uppercase;letter-spacing:1px;}'
-    + '.bal-native{font-size:10px;color:#A08040;font-style:italic;margin-top:3px;}'
-    + '.bal-amt{font-size:28px;font-weight:700;color:#1A5020;margin-top:8px;letter-spacing:-1px;}'
-    + '.hint{margin-top:20px;font-size:11px;color:#666;font-family:-apple-system,sans-serif;text-align:center;line-height:1.6;}'
-    + '</style></head><body>'
-    + '<div class="receipt">'
-    + '<div class="zz-top"></div>'
-    + '<div class="body">'
-    + '<div class="hdr">'
-    + '<div class="stamp"><div class="stamp-en">' + lbl.title + '</div><div class="stamp-native">' + (lbl.titleNative||'') + '</div></div>'
-    + '<div class="name">' + name + '</div>'
-    + '<div class="meta">' + month + '</div>'
-    + '</div>'
-    + '<div class="divider"></div>'
-    + '<div class="rows">' + rows + (balanceRow||'') + '</div>'
-    + (loan > 0 ? '<div class="divider"></div><div class="footer"><div class="bal-en">' + lbl.loanBal + '</div><div class="bal-native">' + (lbl.loanBalNative||'') + '</div><div class="bal-amt">KWD ' + loan + '</div></div>' : '')
-    + '</div>'
-    + '<div class="zz-bot"></div>'
-    + '</div>'
-    + '<div class="hint">Long press the receipt &rarr; Save Image<br>Then send in WhatsApp</div>'
-    + '</body></html>';
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
+  html += '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+  html += '<style>';
+  html += 'body{margin:0;padding:32px 16px;background:#1a1a18;display:flex;flex-direction:column;align-items:center;min-height:100vh;}';
+  html += '.receipt{width:300px;}';
+  html += '.zz-top{height:12px;background:linear-gradient(-45deg,#EDE0C4 6px,transparent 0),linear-gradient(45deg,#EDE0C4 6px,transparent 0);background-size:12px 12px;background-color:#1a1a18;}';
+  html += '.zz-bot{height:12px;background:linear-gradient(-45deg,#1a1a18 6px,transparent 0),linear-gradient(45deg,#1a1a18 6px,transparent 0);background-size:12px 12px;background-color:#EDE0C4;}';
+  html += '.body{background:#EDE0C4;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;}';
+  html += '.hdr{text-align:center;padding:20px 24px 14px;}';
+  html += '.stamp{display:inline-block;border:2.5px solid #8B6A30;border-radius:8px;padding:7px 16px;margin-bottom:14px;}';
+  html += '.stamp-en{font-size:12px;font-weight:700;color:#8B6A30;text-transform:uppercase;letter-spacing:2px;}';
+  html += '.stamp-native{font-size:11px;color:#B09060;font-style:italic;margin-top:3px;}';
+  html += '.name{font-size:22px;font-weight:700;color:#2C1F0A;letter-spacing:-0.5px;}';
+  html += '.meta{font-size:12px;color:#9A7A40;margin-top:4px;}';
+  html += '.divider{height:1px;background:repeating-linear-gradient(90deg,#C8A870 0,#C8A870 6px,transparent 6px,transparent 12px);margin:10px 24px;}';
+  html += '.rows{padding:4px 24px 8px;}';
+  html += '.row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:0.5px solid #D8C898;}';
+  html += '.row:last-child{border-bottom:none;}';
+  html += '.row-left{flex:1;}';
+  html += '.row-en{font-size:15px;font-weight:600;color:#2C1F0A;line-height:1.3;}';
+  html += '.row-native{font-size:13px;color:#A08040;font-style:italic;margin-top:5px;display:block;line-height:1.3;}';
+  html += '.row-amt{font-size:15px;font-weight:700;white-space:nowrap;padding-left:12px;color:#2C1F0A;}';
+  html += '.row-amt.neg{color:#7A2010;}';
+  html += '.row-amt.pos{color:#1A5020;}';
+  html += '.footer{text-align:center;padding:10px 24px 22px;}';
+  html += '.bal-en{font-size:11px;font-weight:700;color:#2C1F0A;text-transform:uppercase;letter-spacing:1px;}';
+  html += '.bal-native{font-size:10px;color:#A08040;font-style:italic;margin-top:3px;}';
+  html += '.bal-amt{font-size:28px;font-weight:700;color:#1A5020;margin-top:8px;letter-spacing:-1px;}';
+  html += '.share-wrap{margin-top:24px;text-align:center;padding:0 16px;}';
+  html += '.share-btn{background:#2C2C2A;color:#F0F0ED;border:none;border-radius:12px;padding:15px 0;font-size:16px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;width:100%;display:block;}';
+  html += '.share-hint{font-size:11px;color:#666;font-family:-apple-system,sans-serif;margin-top:8px;}';
+  html += '@media print{.share-wrap{display:none;}.receipt{margin:0 auto;}}';
+  html += '</style></head><body>';
+  html += '<div class="receipt">';
+  html += '<div class="zz-top"></div>';
+  html += '<div class="body">';
+  html += '<div class="hdr">';
+  html += '<div class="stamp"><div class="stamp-en">' + lbl.title + '</div><div class="stamp-native">' + (lbl.titleNative||'') + '</div></div>';
+  html += '<div class="name">' + name + '</div>';
+  html += '<div class="meta">' + month + '</div>';
+  html += '</div>';
+  html += '<div class="divider"></div>';
+  html += '<div class="rows">' + rows + (balanceRow||'') + '</div>';
+  if (loan > 0) {
+    html += '<div class="divider"></div>';
+    html += '<div class="footer">';
+    html += '<div class="bal-en">Loan Balance</div>';
+    html += '<div class="bal-native">' + (lbl.loanBalNative||'') + '</div>';
+    html += '<div class="bal-amt">KWD ' + loan + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div class="zz-bot"></div>';
+  html += '</div>';
+  html += '<div class="share-wrap">';
+  html += '<button class="share-btn" onclick="doShare()">&#128279;&nbsp; Share / Save</button>';
+  html += '<div class="share-hint">Opens share sheet &mdash; save to Photos or send via WhatsApp</div>';
+  html += '</div>';
+  html += '<script>';
+  html += 'function doShare(){';
+  html += '  if(navigator.share){';
+  html += '    navigator.share({title:"Salary Payslip",url:window.location.href}).catch(function(){});';
+  html += '  } else {';
+  html += '    window.print();';
+  html += '  }';
+  html += '}';
+  html += '<\/script>';
+  html += '</body></html>';
+  return html;
 }
 
 async function sendPayslip() {
