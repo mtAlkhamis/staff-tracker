@@ -611,6 +611,7 @@ function showPayslip() {
     var deductions  = mTx.filter(function(t){ return t.type==="deduction"; });
     var loanReps    = mTx.filter(function(t){ return t.type==="loan_payment"; });
     var salaryPaids = mTx.filter(function(t){ return t.type==="salary"; });
+    var loansInMonth = mTx.filter(function(t){ return t.type==="loan"; });
     var totalAdv = advances.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
     var totalDed = deductions.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
     var totalLrp = loanReps.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
@@ -669,7 +670,7 @@ function showPayslip() {
     });
 
     // New loans added
-    loans.forEach(function(ln) {
+    loansInMonth.forEach(function(ln) {
       rows += buildReceiptRow('Loan added', (lbl.loanAddedNative||'') + (ln.note ? ' (' + ln.note + ')' : ''), '+ ' + fmtK(ln.amount), 'warn');
     });
 
@@ -775,6 +776,7 @@ async function sendPayslip() {
     var deductions  = mTx.filter(function(t){ return t.type==="deduction"; });
     var loanReps    = mTx.filter(function(t){ return t.type==="loan_payment"; });
     var salaryPaids = mTx.filter(function(t){ return t.type==="salary"; });
+    var loansInMonth = mTx.filter(function(t){ return t.type==="loan"; });
     var totalAdv = advances.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
     var totalDed = deductions.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
     var totalLrp = loanReps.reduce(function(s,t){ return s+Number(t.amount||0); }, 0);
