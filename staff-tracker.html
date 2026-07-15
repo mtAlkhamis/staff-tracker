@@ -416,6 +416,8 @@ async function openDetail(empId) {
     if (adv) h += '<div class="ps-row"><span class="ps-lbl">(-) Advances</span><span class="neg">-'+fmtK(adv)+'</span></div>';
     if (ded) h += '<div class="ps-row"><span class="ps-lbl">(-) Deductions</span><span class="neg">-'+fmtK(ded)+'</span></div>';
     if (lrp) h += '<div class="ps-row"><span class="ps-lbl">(-) Loan repayment</span><span class="neg">-'+fmtK(lrp)+'</span></div>';
+    var loansAdded = mTx.filter(function(t){return t.type==="loan";}).reduce(function(s,t){return s+Number(t.amount||0);},0);
+    if (loansAdded) h += '<div class="ps-row"><span class="ps-lbl">(+) Loan added</span><span class="warn">+'+fmtK(loansAdded)+'</span></div>';
     if (sal) h += '<div class="ps-row"><span class="ps-lbl">(-) Salary paid</span><span class="neg">-'+fmtK(sal)+'</span></div>';
     h += '<div class="ps-row total"><span class="ps-lbl">Balance due</span><span class="'+(net<0?"neg":net===0?"mono":"pos")+'">'+fmtK(net)+'</span></div>';
     if (loan) h += '<div class="ps-row"><span class="ps-lbl" style="color:var(--text-h)">Loan balance</span><span class="warn">'+fmtK(loan)+'</span></div>';
@@ -667,7 +669,7 @@ function showPayslip() {
     });
 
     // New loans added
-    d.loans.forEach(function(ln) {
+    loans.forEach(function(ln) {
       rows += buildReceiptRow('Loan added', (lbl.loanAddedNative||'') + (ln.note ? ' (' + ln.note + ')' : ''), '+ ' + fmtK(ln.amount), 'warn');
     });
 
